@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import cors from "cors";
 import helmet from "helmet";
 import orderRoutes from './routes/order';
+import storageRoutes from './routes/storage';
 
 
 dotenv.config();
@@ -17,7 +18,8 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json()); // Add this line to enable JSON parsing in the request body
-app.use('/order', orderRoutes); // Add this line to mount the Task API routes
+app.use('/order', orderRoutes); 
+app.use('/storage', storageRoutes); 
 
 app.get('/', (req: Request, res: Response) => {
 	res.send('Hello, everyone!');
