@@ -1,13 +1,13 @@
 services:
   web:
     build: .
-    container_name: preoder_web
+    container_name: preorder_web
     restart: on-failure:5
     volumes:
       - ./files:/usr/app/files
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     environment:
       - PORT=3000
