@@ -23,7 +23,7 @@ export const orderDb = new QuickDB({
 });
 orderDb.init();
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async(req: Request, res: Response) => {
 	const order: Order = {
 		id: generateUniqueId(),
 		dayAndTime: req.body.dayAndTime,
@@ -38,13 +38,16 @@ router.post('/', (req: Request, res: Response) => {
 		totalMoney: req.body.totalMoney
 	}
 
-	checkStorage(order).then((result: boolean) => {
+	console.log(`Order: ${JSON.stringify(order)}`);
+
+	await checkStorage(order).then(async(result: boolean) => {
 		if (!result) {
 			res.status(409).send();
 			return;
 		}
 
-		orderDb.set(order.id, order);
+		await orderDb.set(order.id, order);
+		await updateStorage(order);
 		res.status(201).send();
 	}).catch(() => {
 		res.status(500).send();
@@ -86,4 +89,18 @@ const checkStorage = async (order: Order): Promise<boolean> => {
 	}
 
 	return true;
+}
+
+const updateStorage = async (order: Order): Promise<void> => {
+	const blackHolderAmount = await storageDb.get("blackHolderAmount") as number;
+	const grayHolderAmount = await storageDb.get("grayHolderAmount") as number;
+	const lanyard1Amount = await storageDb.get("lanyard1Amount") as number;
+	const lanyard2Amount = await storageDb.get("lanyard2Amount") as number;
+	const lanyard3Amount = await storageDb.get("lanyard3Amount") as number;
+
+	storageDb.set("blackHolderAmount", blackHolderAmount - order.blackHolderAmount);
+	storageDb.set("grayHolderAmount", grayHolderAmount - order.grayHolderAmount);
+	storageDb.set("lanyard1Amount", lanyard1Amount - order.lanyard1Amount);
+	storageDb.set("lanyard2Amount", lanyard2Amount - order.lanyard2Amount);
+	storageDb.set("lanyard3Amount", lanyard3Amount - order.lanyard3Amount);
 }

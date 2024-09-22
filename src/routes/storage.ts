@@ -20,28 +20,28 @@ export const storageDb = new QuickDB({
 	await storageDb.init();
 	await storageDb.get("blackHolderAmount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("blackHolderAmount", 0);
+			storageDb.set("blackHolderAmount", 60);
 		}}
 	)
 	
 	await storageDb.get("grayHolderAmount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("grayHolderAmount", 0);
+			storageDb.set("grayHolderAmount", 60);
 		}})
 	
 	await storageDb.get("lanyard1Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard1Amount", 0);
+			storageDb.set("lanyard1Amount", 60);
 		}})
 	
 	await storageDb.get("lanyard2Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard2Amount", 0);
+			storageDb.set("lanyard2Amount", 60);
 		}})
 	
 	await storageDb.get("lanyard3Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard3Amount", 0);
+			storageDb.set("lanyard3Amount", 60);
 		}})
 })()
 
@@ -65,32 +65,33 @@ router.post('/', (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
 	const id: string = req.params.id;
-	const value = await storageDb.get(id);
+	if (!req.query.value) {
+		const value = await storageDb.get(id);
 
-	if (value === undefined || value === null) {
-		res.status(404).send("Not found");
+		if (value === undefined || value === null) {
+			res.status(404).send("Not found");
+			return;
+		}
+		console.log(`Key: ${id}, Value: ${value}`);
+		res.status(200).json({ value });
 		return;
 	}
-	console.log(`Key: ${id}, Value: ${value}`);
-	res.status(200).json({ value });
-});
 
-router.put('/:id', (req: Request, res: Response) => {
-	const id: string = req.params.id;
-	const value: number = z.number().parse(req.query.value);
-
-	if (!value) {
-		res.status(400).send();
-		return;
-	}
 	if (!storageDb.has(id)) {
 		res.status(404).send();
 		return;
 	}
 
-	storageDb.set(id, value);
-
-	res.status(200).send();
+	try {
+		console.log(`Key: ${id}, Value: ${req.query.value}`);
+		const value: number = z.coerce.number().parse(req.query.value);
+		
+		await storageDb.set(id, value);
+		res.status(200).json({ value });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send("Invalid value");
+	}
 });
 
 router.get('/', (req: Request, res: Response) => {
