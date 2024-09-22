@@ -9,3 +9,5 @@ services:
       - /etc/localtime:/etc/localtime:ro
     expose:
       - "3000"
+    environment:
+      - PORT=3000
