@@ -15,11 +15,13 @@ COPY ./nodemon.json ./
 COPY ./public ./public
 COPY ./src ./src
 
-
 RUN yarn install
 # If you are building your code for production
 # RUN npm --omit=dev
 
 # Bundle app source
 # CMD ["ls", "-la"]
-CMD [ "yarn", "start" ] 
+RUN yarn build
+
+# Start the application
+CMD ["yarn", "start"]
