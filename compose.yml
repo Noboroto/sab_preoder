@@ -1,8 +1,11 @@
 services:
   web:
     build: .
+    container_name: preoder_web
     restart: on-failure:5
     volumes:
       - ./files:/usr/src/app/files
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    expose:
+      - "3000"
