@@ -20,28 +20,28 @@ export const storageDb = new QuickDB({
 	await storageDb.init();
 	await storageDb.get("blackHolderAmount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("blackHolderAmount", 60);
+			storageDb.set("blackHolderAmount", 0);
 		}}
 	)
 	
 	await storageDb.get("grayHolderAmount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("grayHolderAmount", 60);
+			storageDb.set("grayHolderAmount", 0);
 		}})
 	
 	await storageDb.get("lanyard1Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard1Amount", 60);
+			storageDb.set("lanyard1Amount", 0);
 		}})
 	
 	await storageDb.get("lanyard2Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard2Amount", 60);
+			storageDb.set("lanyard2Amount", 0);
 		}})
 	
 	await storageDb.get("lanyard3Amount").then((value: number) => {
 		if (value < 0 || isNaN(value) || value === undefined || value === null) {
-			storageDb.set("lanyard3Amount", 60);
+			storageDb.set("lanyard3Amount", 0);
 		}})
 })()
 
@@ -96,7 +96,12 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.get('/', (req: Request, res: Response) => {
 	storageDb.all().then((data: any) => {
-		res.status(200).json(data);
+		// convert to json map and send
+		const json = {};
+		data.forEach((value: any) => {
+			json[value.id] = value.value;
+		});
+		res.status(200).json(json);
 	});
 });
 

@@ -38,7 +38,6 @@ router.post('/', async(req: Request, res: Response) => {
 		totalMoney: req.body.totalMoney
 	}
 
-	console.log(`Order: ${JSON.stringify(order)}`);
 
 	await checkStorage(order).then(async(result: boolean) => {
 		if (!result) {
