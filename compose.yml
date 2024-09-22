@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    restart: on-failure:5
+    volumes:
+      - ./files:/usr/src/app/files
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
