@@ -33,6 +33,7 @@ app.use('/storage', storageRoutes);
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
 app.get('/', (req: Request, res: Response) => {
+	console.log('GET /');
 	res.sendFile(path.join(path.dirname(__dirname), 'public', 'index.html'));
 });
 
