@@ -8,6 +8,22 @@ export const storageDb = new QuickDB({
 });
 storageDb.init();
 
+if (!storageDb.has("blackHolderAmount")) {
+	storageDb.set("blackHolderAmount", 0);
+}
+if (!storageDb.has("grayHolderAmount")) {
+	storageDb.set("grayHolderAmount", 0);
+}
+if (!storageDb.has("lanyard1Amount")) {
+	storageDb.set("lanyard1Amount", 0);
+}
+if (!storageDb.has("lanyard2Amount")) {
+	storageDb.set("lanyard2Amount", 0);
+}
+if (!storageDb.has("lanyard3Amount")) {
+	storageDb.set("lanyard3Amount", 0);
+}
+
 router.post('/', (req: Request, res: Response) => {
 	const id: string = req.body.id;
 	const value: number = req.body.value;
