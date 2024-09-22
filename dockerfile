@@ -7,6 +7,8 @@ WORKDIR /usr/app
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
+COPY ./.prettierrc.json ./
+COPY ./.eslintrc.json ./
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./nodemon.json ./
