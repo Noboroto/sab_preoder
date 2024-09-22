@@ -1,8 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { QuickDB } from "quick.db";
+import * as fs from "fs";
+import * as path from "path";
 
 const router = Router();
-const storageDbPath = process.env.ORDER_DB_PATH || "../../files/storage.sqlite";
+const storageDbPath = process.env.ORDER_DB_PATH || "./files/storage.sqlite";
+const dirPath = path.dirname(storageDbPath);
+
+if (!fs.existsSync(dirPath)) {
+	fs.mkdirSync(dirPath);
+}
+
 export const storageDb = new QuickDB({
 	filePath: storageDbPath
 });

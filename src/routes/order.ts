@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { Order } from '../models/oder';
 import { QuickDB } from "quick.db";
 import { storageDb } from './storage';
+import * as fs from "fs";
+import * as path from "path";
 
 const router = Router();
 
@@ -9,7 +11,13 @@ function generateUniqueId(): string {
 	return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
 }
 
-const orderDbPath = process.env.ORDER_DB_PATH || "../../files/orders.sqlite";
+const orderDbPath = process.env.ORDER_DB_PATH || "./files/orders.sqlite";
+const dirPath = path.dirname(orderDbPath);
+
+if (!fs.existsSync(dirPath)) {
+	fs.mkdirSync(dirPath);
+}
+
 export const orderDb = new QuickDB({
 	filePath: orderDbPath
 });
