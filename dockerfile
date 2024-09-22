@@ -1,8 +1,8 @@
 FROM node:18-alpine3.20
 
 # Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/app
+WORKDIR /usr/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -10,6 +10,7 @@ WORKDIR /usr/src/app
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./nodemon.json ./
+COPY . .
 
 
 RUN yarn --production --network-timeout 100000
