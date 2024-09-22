@@ -14,7 +14,7 @@ COPY ./public ./public
 COPY ./src ./src
 
 
-RUN yarn
+RUN yarn install
 # If you are building your code for production
 # RUN npm --omit=dev
 
