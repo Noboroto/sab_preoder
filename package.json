@@ -1,15 +1,18 @@
 {
-  "name": "sab_preoder",
-  "version": "1.0.0",
-  "main": "src/app.js",
-  "repository": "https://github.com/Noboroto/sab_preoder.git",
-  "author": "David0403 <thanhtuvo135@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.21.0"
-  },
-  "devDependencies": {
-    "dotenv": "^16.4.5",
-    "nodemon": "^3.1.7"
-  }
+	"name": "sab_preoder",
+	"version": "1.0.0",
+	"main": "src/app.js",
+	"repository": "https://github.com/Noboroto/sab_preoder.git",
+	"author": "David0403 <thanhtuvo135@gmail.com>",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.21.0"
+	},
+	"devDependencies": {
+		"dotenv": "^16.4.5",
+		"nodemon": "^3.1.7"
+	},
+	"scripts": {
+		"start": "nodemon --inspect src/app.js"
+	}
 }
