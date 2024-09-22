@@ -10,7 +10,8 @@ WORKDIR /usr/app
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./nodemon.json ./
-COPY . .
+COPY ./public ./public
+COPY ./src ./src
 
 
 RUN yarn --production --network-timeout 100000
