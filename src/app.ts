@@ -12,7 +12,7 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 app.use(helmet({
-	referrerPolicy: { policy: 'no-referrer' }  // or 'origin', 'unsafe-url', etc.
+	referrerPolicy: { policy: 'origin' }  // or 'origin', 'unsafe-url', etc.
 }));
 app.use(
 	helmet.contentSecurityPolicy({
