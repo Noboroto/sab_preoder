@@ -106,7 +106,7 @@ router.get('/', (req: Request, res: Response) => {
 });
 
 router.get('/setAll', async (req: Request, res: Response) => {
-	const inp: number = z.number().parse(req.params.value);
+	const inp: number = z.coerce.number().parse(req.query.value);
 	
 	if (!inp) {
 		res.status(400).send();
