@@ -23,7 +23,7 @@ export const orderDb = new QuickDB({
 });
 orderDb.init();
 
-router.post('/', async(req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
 	const order: Order = {
 		id: generateUniqueId(),
 		dayAndTime: req.body.dayAndTime,
@@ -38,19 +38,19 @@ router.post('/', async(req: Request, res: Response) => {
 		totalMoney: req.body.totalMoney
 	}
 
-
-	await checkStorage(order).then(async(result: boolean) => {
-		if (!result) {
-			res.status(409).send();
-			return;
+	orderDb.set(order.id, order).then(() => {
+		updateStorage(order).then(() => {
+			res.status(201).send();
+		}).catch(() => {
+			res.status(500).send();
 		}
-
-		await orderDb.set(order.id, order);
-		await updateStorage(order);
-		res.status(201).send();
+		).catch(() => {
+			res.status(500).send();
+		});
 	}).catch(() => {
 		res.status(500).send();
 	});
+
 });
 
 router.get('/:id', (req: Request, res: Response) => {
