@@ -221,19 +221,19 @@ function postData() {
 	})
 		.then(response => {
 			if (response.ok) {
-				alert("Order placed successfully!");
+				alert("Order placed successfully! This website will reload in 3 seconds.");
 				setTimeout(() => {
 					location.reload();
-				}, 5000);
+				}, 3000);
 			} else {
 				throw new Error('Something went wrong');
 			}
 		})
 		.catch(error => {
-			alert("An error occurred. Please try again later.");
+			alert("An error occurred. Please try again later. This website will reload in 3 seconds.");
 			setTimeout(() => {
 				location.reload();
-			}, 5000);
+			}, 3000);
 		});
 }
 
@@ -265,5 +265,7 @@ document.getElementById('back-btn').addEventListener("click", function (event) {
 
 document.getElementById('submit-btn').addEventListener("click", function (event) {
 	event.preventDefault();
+	this.disabled = true;
+	document.getElementById('back-btn').disabled = true;
 	postData();
 });

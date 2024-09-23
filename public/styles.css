@@ -170,6 +170,11 @@ button {
     align-items: start;
 }
 
+#isTranferred {
+	width: 0.75rem;
+	height: 0.75rem;
+}
+
 #qr_code {
     width: 100%;
     max-width: 512px;
