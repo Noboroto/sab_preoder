@@ -7,3 +7,5 @@ services:
       - ./files:/usr/app/files
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "4000:4000"
