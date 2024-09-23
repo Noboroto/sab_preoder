@@ -14,8 +14,8 @@ COPY ./tsconfig.json ./
 COPY ./nodemon.json ./
 COPY ./public ./public
 COPY ./src ./src
-EXPOSE 4000
-ENV PORT=4000
+EXPOSE 8280
+ENV PORT=8280
 
 RUN yarn install
 # If you are building your code for production
