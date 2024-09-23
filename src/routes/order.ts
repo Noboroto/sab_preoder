@@ -53,7 +53,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 });
 
-router.get('/:id', (req: Request, res: Response) => {
+router.get('/item/:id', (req: Request, res: Response) => {
 	orderDb.get(req.params.id).then((order: Order) => {
 		res.status(200).send(order);
 	}).catch(() => {
