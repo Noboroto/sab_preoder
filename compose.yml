@@ -7,5 +7,7 @@ services:
       - ./files:/usr/app/files
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "8280:8280"
+networks:
+  my-custom-network:
+    external: true
+    name: multi-domain
