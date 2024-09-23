@@ -9,6 +9,16 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - domain-net
+  fix-bug:
+    build: .
+    container_name: preorder_web_fix_bug
+    restart: on-failure:5
+    volumes:
+      - ./files:/usr/app/files
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - domain-net
 networks:
   domain-net:
     external: true
