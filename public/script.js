@@ -175,7 +175,7 @@ function toggleBody() {
 }
 
 async function isOutOfStock() {
-	return fetch('http://localhost:4000/storage', {
+	return fetch('http://oj.sab.edu.vn/storage', {
 		method: 'GET',
 	}).then(async (response) => {
 		const data_map = await response.json();
@@ -217,7 +217,7 @@ function postData() {
     order.dayAndTime = Date.now();
     console.log("Post data now");
 
-    fetch('http://localhost:4000/order', {
+    fetch('http://oj.sab.edu.vn/order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
