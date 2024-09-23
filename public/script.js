@@ -251,7 +251,7 @@ document.getElementById('isTranferred').addEventListener('change', function () {
 
 document.getElementById('checkout-btn').addEventListener('click', async function (event) {
 	event.preventDefault();
-	if (validateCheckout() && !await isOutOfStock()) {
+	if (validateCheckout()) {
 		updateCustomerInfo();
 		setQR();
 		toggleBody();
