@@ -11,7 +11,22 @@ dotenv.config();
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: ["'self'"],
+			imgSrc: ["'self'", 'data:', 'https://img.vietqr.io'],
+		},
+	})
+); 
 
+const corsOptions = {
+	origin: '*', // Allow all domains
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
+	allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization', // Allowed headers
+	credentials: true, // Allow cookies to be sent (if needed)
+};
+app.use(cors(corsOptions));
 app.use(express.json()); // Add this line to enable JSON parsing in the request body
 app.use('/order', orderRoutes); 
 app.use('/storage', storageRoutes); 
