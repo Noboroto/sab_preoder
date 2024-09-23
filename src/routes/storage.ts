@@ -105,4 +105,28 @@ router.get('/', (req: Request, res: Response) => {
 	});
 });
 
+router.get('/setAll', async (req: Request, res: Response) => {
+	const value: number = z.number().parse(req.query.value);
+	
+	if (!value) {
+		res.status(400).send();
+		return;
+	}	
+
+	await storageDb.set("blackHolderAmount", value);
+	await storageDb.set("grayHolderAmount", value);
+	await storageDb.set("lanyard1Amount", value);
+	await storageDb.set("lanyard2Amount", value);
+	await storageDb.set("lanyard3Amount", value);
+
+	await storageDb.all().then((data: any) => {
+		// convert to json map and send
+		const json = {};
+		data.forEach((value: any) => {
+			json[value.id] = value.value;
+		});
+		res.status(200).json(json);
+	});
+});
+
 export default router;
