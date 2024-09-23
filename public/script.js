@@ -251,7 +251,6 @@ document.getElementById('isTranferred').addEventListener('change', function () {
 
 document.getElementById('checkout-btn').addEventListener('click', async function (event) {
 	event.preventDefault();
-	const isOnStock = await isOutOfStock();
 	if (validateCheckout() && !await isOutOfStock()) {
 		updateCustomerInfo();
 		setQR();
