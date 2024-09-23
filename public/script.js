@@ -175,7 +175,7 @@ function toggleBody() {
 }
 
 async function isOutOfStock() {
-	return fetch('http://localhost:3000/storage', {
+	return fetch('http://localhost:4000/storage', {
 		method: 'GET',
 	}).then(async (response) => {
 		const data_map = await response.json();
@@ -217,7 +217,7 @@ function postData() {
     order.dayAndTime = Date.now();
     console.log("Post data now");
 
-    fetch('http://localhost:3000/order', {
+    fetch('http://localhost:4000/order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -256,13 +256,13 @@ document.getElementById('isTranferred').addEventListener('change', function() {
 
 document.getElementById('checkout-btn').addEventListener('click', async function(event) {
     event.preventDefault(); 
-	let isOutofSTOCK = await isOutOfStock();
-	if (!isOutofSTOCK && validateCheckout())
-	{
-		updateCustomerInfo();
-		setQR();
-		toggleBody();
-	}
+		const isOnStock = await isOutOfStock();
+		if (validateCheckout() && !await isOutOfStock())
+		{
+			updateCustomerInfo();
+			setQR();
+			toggleBody();
+		}
 });
 
 document.getElementById('back-btn').addEventListener("click", function(event) {
