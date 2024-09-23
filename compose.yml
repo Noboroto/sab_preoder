@@ -9,6 +9,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - domain-net
+    environment:
+      - AUTH=sabidiordertoi3009
 networks:
   domain-net:
     external: true

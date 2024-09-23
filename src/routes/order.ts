@@ -62,6 +62,18 @@ router.get('/:id', (req: Request, res: Response) => {
 });
 
 
+router.get('/sheet', async (req: Request, res: Response) => {
+	const auth = req.query.auth as string;
+	if (auth !== process.env.AUTH && auth !== "") {
+		res.status(401).send();
+		return;
+	}
+	// return all orders in json format
+	const orders = await orderDb.all();
+	res.status(200).send(orders);
+});
+
+
 export default router;
 
 const checkStorage = async (order: Order): Promise<boolean> => {
