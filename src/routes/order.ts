@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { Order } from '../models/oder';
 import { QuickDB } from "quick.db";
 import { storageDb } from './storage';
+import { sendEmail } from '../utils/sendEmail';
 import * as fs from "fs";
 import * as path from "path";
 
@@ -26,7 +27,7 @@ orderDb.init();
 router.post('/', async (req: Request, res: Response) => {
 	const order: Order = {
 		id: generateUniqueId(),
-		dayAndTime: req.body.dayAndTime,
+		dayAndTime: new Date(),
 		email: req.body.email,
 		phone: req.body.phone,
 		name: req.body.name,
@@ -40,7 +41,11 @@ router.post('/', async (req: Request, res: Response) => {
 
 	orderDb.set(order.id, order).then(() => {
 		updateStorage(order).then(() => {
-			res.status(201).send();
+			handleEmail(order).then(() => {
+				res.status(200).send(order);
+			}).catch(() => {
+				res.status(500).send();
+			});
 		}).catch(() => {
 			res.status(500).send();
 		}
@@ -76,31 +81,30 @@ router.get('/sheet', async (req: Request, res: Response) => {
 
 export default router;
 
-const checkStorage = async (order: Order): Promise<boolean> => {
-	const blackHolderAmount = await storageDb.get("blackHolderAmount") as number;
-	const grayHolderAmount = await storageDb.get("grayHolderAmount") as number;
-	const lanyard1Amount = await storageDb.get("lanyard1Amount") as number;
-	const lanyard2Amount = await storageDb.get("lanyard2Amount") as number;
-	const lanyard3Amount = await storageDb.get("lanyard3Amount") as number;
+const handleEmail = async (order: Order): Promise<void> => {
+	const orderTimeStr = order.dayAndTime.toLocaleString("vi-VN", {
+		timeZone: "Asia/Ho_Chi_Minh",
+		day: "2-digit",
+		month: "numeric",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
-	if (blackHolderAmount < order.blackHolderAmount) {
-		return false;
-	}
-	if (grayHolderAmount < order.grayHolderAmount) {
-		return false;
-	}
-	if (lanyard1Amount < order.lanyard1Amount) {
-		return false;
-	}
-	if (lanyard2Amount < order.lanyard2Amount) {
-		return false;
-	}
-	if (lanyard3Amount < order.lanyard3Amount) {
-		return false;
-	}
+	const replacements = new Map<string, string>();
+	replacements.set("Name", order.name);
+	replacements.set("OrderDate", orderTimeStr);
+	replacements.set("blackHolderAmount", order.blackHolderAmount.toString());
+	replacements.set("grayHolderAmount", order.grayHolderAmount.toString());
+	replacements.set("lanyard1Amount", order.lanyard1Amount.toString());
+	replacements.set("lanyard2Amount", order.lanyard2Amount.toString());
+	replacements.set("lanyard3Amount", order.lanyard3Amount.toString());
+	replacements.set("Total", (order.totalMoney / 1000).toString());
+	replacements.set("Phone", order.phone);
 
-	return true;
+	await sendEmail(order.email, replacements);
 }
+
 
 const updateStorage = async (order: Order): Promise<void> => {
 	const blackHolderAmount = await storageDb.get("blackHolderAmount") as number;

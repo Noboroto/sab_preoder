@@ -1,0 +1,30 @@
+Xin chào bạn {{Name}},
+
+Chúng mình đã nhận được thông tin đơn đặt hàng dây đeo của bạn. Cảm ơn bạn đã ủng hộ SAB in HCMUS!
+
+### **THÔNG TIN ĐẶT HÀNG**
+
+*   Họ tên: {{Name}}
+*   Thời gian đặt hàng: {{OrderDate}}
+*   Số điện thoại {{Phone}}
+*   Tổng số tiền: {{Total}}.000 VNĐ
+
+### **CHI TIẾT ĐƠN HÀNG**
+
+*   Dây đeo loại 1: {{lanyard1Amount}}
+*   Dây đeo loại 2: {{lanyard2Amount}}
+*   Dây đeo loại 3: {{lanyard3Amount}}
+*   Vỏ thẻ đen: {{blackHolderAmount}}
+*   Vỏ thẻ xám: {{grayHolderAmount}}
+
+### **THỜI GIAN VÀ ĐỊA ĐIỂM NHẬN HÀNG**
+
+*   Thời gian: **Từ 7:30 - 11:00 và 14:00-17:00** từ ngày 30/9 đến ngày 5/10
+*   Địa điểm: **bên hông sảnh I, cơ sở 1 Nguyễn Văn Cừ nhé.**
+
+Các bạn nào **Chưa thanh toán đơn hàng** có thể lên web để [thực hiện đơn hàng](https://preorder.sab.edu.vn) mới và thanh toán nha.
+
+Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng mình bằng cách phản hồi email này hoặc fanpage [SAB in HCMUS](https://www.facebook.com/sab.ctda).
+
+Trân trọng,  
+SAB in HCMUS
