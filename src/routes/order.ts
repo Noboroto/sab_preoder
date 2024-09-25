@@ -40,16 +40,10 @@ router.post('/', async (req: Request, res: Response) => {
 	}
 
 	orderDb.set(order.id, order).then(() => {
-		updateStorage(order).then(() => {
-			handleEmail(order).then(() => {
-				res.status(200).send(order);
-			}).catch(() => {
-				res.status(500).send();
-			});
+		handleEmail(order).then(() => {
+			res.status(200).send(order);
 		}).catch(() => {
-			res.status(500).send();
-		}
-		).catch(() => {
+			console.error("Error sending email");
 			res.status(500).send();
 		});
 	}).catch(() => {
