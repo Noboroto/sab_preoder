@@ -25,38 +25,11 @@ export const orderDb = new QuickDB({
 orderDb.init();
 
 router.post('/', async (req: Request, res: Response) => {
-	const order: Order = {
-		id: generateUniqueId(),
-		dayAndTime: new Date(),
-		email: req.body.email,
-		phone: req.body.phone,
-		name: req.body.name,
-		blackHolderAmount: req.body.blackHolderAmount,
-		grayHolderAmount: req.body.grayHolderAmount,
-		lanyard1Amount: req.body.lanyard1Amount,
-		lanyard2Amount: req.body.lanyard2Amount,
-		lanyard3Amount: req.body.lanyard3Amount,
-		totalMoney: req.body.totalMoney
-	}
-
-	orderDb.set(order.id, order).then(() => {
-		handleEmail(order).then(() => {
-			res.status(201).send(order);
-		}).catch(() => {
-			res.status(500).send();
-		});
-	}).catch(() => {
-		res.status(500).send();
-	});
-
+	res.status(500).send();
 });
 
 router.get('/item/:id', (req: Request, res: Response) => {
-	orderDb.get(req.params.id).then((order: Order) => {
-		res.status(200).send(order);
-	}).catch(() => {
-		res.status(404).send();
-	});
+	res.status(500).send();
 });
 
 
