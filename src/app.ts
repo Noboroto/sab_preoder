@@ -17,9 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/order', orderRoutes); 
 app.use('/storage', storageRoutes); 
 if (DOMAIN.includes('preorder')) {
+	console.log('Using public folder');
 	app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 }
 else {
+	console.log('Using public_offline folder');
 	app.use(express.static(path.join(path.dirname(__dirname), 'public_offline')));
 }
 
@@ -27,15 +29,12 @@ app.get('/', (req: Request, res: Response) => {
 	console.log('GET /');
 	console.log('DOMAIN:', DOMAIN);
 	if (DOMAIN.includes('localhost')) {
-		console.log('Sending offline.html');
 		res.sendFile(path.join(path.dirname(__dirname), 'public_offline', 'index.html'));
 	}
 	else if (DOMAIN.includes('preorder')) {
-		console.log('Sending index.html');
 		res.sendFile(path.join(path.dirname(__dirname), 'public', 'index.html'));
 	}
 	else {
-		console.log('Sending offline.html');
 		res.sendFile(path.join(path.dirname(__dirname), 'public_offline', 'index.html'));
 	}
 });
