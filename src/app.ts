@@ -27,14 +27,16 @@ else {
 
 app.get('/', (req: Request, res: Response) => {
 	console.log('GET /');
-	console.log('DOMAIN:', DOMAIN);
 	if (DOMAIN.includes('localhost')) {
+		console.info('DOMAIN includes localhost');
 		res.sendFile(path.join(path.dirname(__dirname), 'public_offline', 'index.html'));
 	}
 	else if (DOMAIN.includes('preorder')) {
+		console.info('DOMAIN includes preorder');
 		res.sendFile(path.join(path.dirname(__dirname), 'public', 'index.html'));
 	}
 	else {
+		console.info('DOMAIN includes production');
 		res.sendFile(path.join(path.dirname(__dirname), 'public_offline', 'index.html'));
 	}
 });
