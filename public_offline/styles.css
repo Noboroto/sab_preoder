@@ -62,7 +62,7 @@ input[type="text"], input[type="email"], input[type="number"] {
 
 select {
     width: 100%;
-    padding: 10px;
+    padding: 9.5px;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -205,7 +205,7 @@ button {
     .container {
         width: 90%;
     }
-    label, input[type="text"], input[type="email"], input[type="number"] {
+    label, input[type="text"], select, input[type="email"], input[type="number"] {
         font-size: 0.75rem;
     }
     .item-card {
