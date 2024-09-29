@@ -216,3 +216,15 @@ document.getElementById('submit-btn').addEventListener("click", function (event)
 	document.getElementById('back-btn').disabled = true;
 	postData();
 });
+
+var selectElement = document.getElementById('method');
+
+selectElement.addEventListener('change', function () {
+	var selectedValue = this.value;
+	if (selectedValue === "cash") {
+		document.getElementById("checkout-btn").innerText = "Submit";
+	}
+	else {
+		document.getElementById("checkout-btn").innerText = "Check out<";
+	}
+});  
