@@ -17,7 +17,7 @@ let order = {
 }
 
 function isValidID(id) {
-	const idRegex = /^2112[0-9]{4}$/;
+	const idRegex = /^2[0-9]12[0-9]{4}$/;
 	return idRegex.test(id);
 }
 
