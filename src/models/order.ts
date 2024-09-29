@@ -12,6 +12,7 @@ export interface Order {
 	lanyard2Amount: number;
 	lanyard3Amount: number;
 	totalMoney: number;
+	paymentMethod: string;
 }
 
 export const OrderSchema = z.object({

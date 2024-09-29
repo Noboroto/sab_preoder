@@ -1,5 +1,5 @@
 services:
-  web:
+  preorder_web:
     build: .
     container_name: preorder_web
     restart: on-failure:5
@@ -11,6 +11,21 @@ services:
       - domain-net
     environment:
       - AUTH=sabidiordertoi3009
+      - DOMAIN=preorder.sab.edu.vn
+
+  order_web:
+    build: .
+    container_name: preorder_web
+    restart: on-failure:5
+    volumes:
+      - ./files_offline:/usr/app/files
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - domain-net
+    environment:
+      - AUTH=sabidiordertoi3009
+      - DOMAIN=order.sab.edu.vn
 networks:
   domain-net:
     external: true
