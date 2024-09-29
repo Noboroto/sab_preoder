@@ -1,8 +1,11 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
+const DOMAIN = "http://localhost:5000" //'https://order.sab.edu.vn/'
+const ID_LENGTH = 8;
 
 let order = {
 	dayAndTime: Date,
+	orderID: String,
 	studentID: String,
 	email: String,
 	phone: String,
@@ -139,7 +142,7 @@ function updateCheckoutRow(rowId, quantity) {
 
 function setQR() {
 	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} `
-	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${order.totalMoney}&addInfo=SAB%20ORDER%20${order.studentID}&accountName=Vo%20Thanh%20Tu`)
+	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${order.totalMoney}&addInfo=SAB%20ORDER%20${order.studentID}%20${order.orderID}&accountName=Vo%20Thanh%20Tu`)
 }
 
 function toggleBody() {
@@ -151,7 +154,7 @@ function postData() {
 	order.dayAndTime = Date.now();
 	console.log("Post data now");
 
-	fetch(' https://order.sab.edu.vn/order', {
+	fetch(`${DOMAIN}/order`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -191,6 +194,9 @@ document.getElementById('isTranferred').addEventListener('change', function () {
 document.getElementById('checkout-btn').addEventListener('click', async function (event) {
 	event.preventDefault();
 	const method = document.getElementById('method').value.trim();
+
+	randomID();
+
 	if (validateCheckout()) {
 		if (method === "cash") {
 			order.paymentMethod = "cash";
@@ -228,3 +234,31 @@ selectElement.addEventListener('change', function () {
 		document.getElementById("checkout-btn").innerText = "Check out<";
 	}
 });  
+
+function randomString(length) {
+	const array = new Uint32Array(length);
+	window.crypto.getRandomValues(array);
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(array[i] % chars.length);
+	}
+	return result;
+}
+
+function randomID() {
+	let tempID = randomString(ID_LENGTH);
+	fetch(`${DOMAIN}/item/${tempID}`)
+		.then(response => {
+			if (response.ok) {
+				randomID();
+			} else {
+				order.orderID = tempID;
+				setQR();
+			}
+		})
+		.catch(error => {
+			console.error("Error occurred while checking ID availability");
+			randomID();
+		});
+}

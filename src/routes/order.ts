@@ -6,10 +6,6 @@ import * as path from "path";
 
 const router = Router();
 
-function generateUniqueId(): string {
-	return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
-}
-
 const orderDbPath = process.env.ORDER_DB_PATH || "./files/orders.sqlite";
 const dirPath = path.dirname(orderDbPath);
 
@@ -27,7 +23,7 @@ router.post('/', async (req: Request, res: Response) => {
 		res.status(500).send();
 	}
 	const order: Order = {
-		id: generateUniqueId(),
+		id: req.body.orderID,
 		dayAndTime: new Date(),
 		email: "",
 		phone: "",
@@ -50,7 +46,12 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 router.get('/item/:id', (req: Request, res: Response) => {
-	res.status(500).send();
+	const id = req.params.id;
+	orderDb.get(id).then((order) => {
+		res.status(200).send(order);
+	}).catch(() => {
+		res.status(404).send();
+	});
 });
 
 
