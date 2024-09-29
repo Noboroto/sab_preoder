@@ -126,7 +126,7 @@ function updateCustomerInfo() {
 	const studentID = document.getElementById('student-id').value.trim();
 	const method = document.getElementById('method').value.trim();
 
-	document.getElementById('customer-student-id').innerText = `Seller Student ID: ${studentID}`;
+	document.getElementById('seller-student-id').innerText = `Seller Student ID: ${studentID}`;
 
 	order.studentID = studentID;
 	order.paymentMethod = method;
