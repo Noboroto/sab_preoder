@@ -15,7 +15,7 @@ services:
 
   order_web:
     build: .
-    container_name: preorder_web
+    container_name:  order_web
     restart: on-failure:5
     volumes:
       - ./files_offline:/usr/app/files
