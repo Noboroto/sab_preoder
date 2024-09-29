@@ -34,7 +34,7 @@ function updateCheckoutInfo() {
 	const priceLanyard = 37000;
 	const priceHolder = 10000;
 
-	const totalPrice = 
+	const totalPrice =
 		(totalLanyard * priceLanyard) +
 		(totalHolder * priceHolder);
 
@@ -151,7 +151,7 @@ function postData() {
 	order.dayAndTime = Date.now();
 	console.log("Post data now");
 
-	fetch(' http://localhost:5000/order', {
+	fetch(' https://order.sab.edu.vn/order', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
