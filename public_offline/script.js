@@ -1,6 +1,6 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
-const DOMAIN = "http://localhost:5000" //'https://order.sab.edu.vn/'
+const DOMAIN = 'https://order.sab.edu.vn/'
 const ID_LENGTH = 8;
 
 let order = {
