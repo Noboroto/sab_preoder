@@ -22,8 +22,12 @@ router.post('/', async (req: Request, res: Response) => {
 	if (process.env.DOMAIN == "preorder.sab.edu.vn") {
 		res.status(500).send();
 	}
+	let orderID = req.body.orderID as string;
+	if (orderID  == undefined || orderID == "") {
+		orderID = randomString(8);
+	}
 	const order: Order = {
-		id: req.body.orderID as string,
+		id: orderID,
 		dayAndTime: new Date(),
 		email: "",
 		phone: "",
@@ -70,3 +74,14 @@ router.get('/sheet', async (req: Request, res: Response) => {
 
 
 export default router;
+
+function randomString(length) {
+	const array = new Uint32Array(length);
+	window.crypto.getRandomValues(array);
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(array[i] % chars.length);
+	}
+	return result;
+}
