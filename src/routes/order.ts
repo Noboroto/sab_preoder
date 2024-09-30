@@ -23,11 +23,11 @@ router.post('/', async (req: Request, res: Response) => {
 		res.status(500).send();
 	}
 	const order: Order = {
-		id: req.body.orderID,
+		id: req.body.orderID as string,
 		dayAndTime: new Date(),
 		email: "",
 		phone: "",
-		name: req.body.id,
+		name: req.body.name,
 		blackHolderAmount: req.body.blackHolderAmount,
 		grayHolderAmount: req.body.grayHolderAmount,
 		lanyard1Amount: req.body.lanyard1Amount,
@@ -42,6 +42,7 @@ router.post('/', async (req: Request, res: Response) => {
 	}
 	).catch((e) => {
 		console.error(e)
+		console.info(order)
 		res.status(500).send();
 	});
 });
