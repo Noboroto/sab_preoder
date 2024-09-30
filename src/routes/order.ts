@@ -40,7 +40,8 @@ router.post('/', async (req: Request, res: Response) => {
 	orderDb.set(order.id, order).then(() => {
 		res.status(200).send(order);
 	}
-	).catch(() => {
+	).catch((e) => {
+		console.error(e)
 		res.status(500).send();
 	});
 });

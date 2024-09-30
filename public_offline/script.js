@@ -1,6 +1,6 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
-const DOMAIN = 'https://order.sab.edu.vn/'
+const DOMAIN = 'https://order.sab.edu.vn';
 const ID_LENGTH = 8;
 
 let order = {
@@ -196,6 +196,8 @@ document.getElementById('checkout-btn').addEventListener('click', async function
 	const method = document.getElementById('method').value.trim();
 
 	randomID();
+	order.name = document.getElementById('student-id').value.trim();
+	order.studentID = document.getElementById('student-id').value.trim();
 
 	if (validateCheckout()) {
 		if (method === "cash") {
