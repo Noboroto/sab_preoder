@@ -76,12 +76,23 @@ router.get('/sheet', async (req: Request, res: Response) => {
 export default router;
 
 function randomString(length) {
-	const array = new Uint32Array(length);
-	window.crypto.getRandomValues(array);
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	let result = '';
-	for (let i = 0; i < length; i++) {
-		result += chars.charAt(array[i] % chars.length);
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const charactersLength = characters.length;
+
+	// Lấy thời gian hiện tại làm seed  
+	let seed = Date.now();
+
+	// Hàm PRNG đơn giản sử dụng seed  
+	function random(): number {
+		seed = (seed * 16807) % 2147483647;
+		return (seed - 1) / 2147483646;
 	}
+
+	for (let i = 0; i < length; i++) {
+		const randomIndex = Math.floor(random() * charactersLength);
+		result += characters[randomIndex];
+	}
+
 	return result;
 }
