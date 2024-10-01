@@ -261,6 +261,6 @@ selectElement.addEventListener('change', function () {
 		document.getElementById("checkout-btn").innerText = "Submit";
 	}
 	else {
-		document.getElementById("checkout-btn").innerText = "Check out<";
+		document.getElementById("checkout-btn").innerText = "Check out";
 	}
 });  
