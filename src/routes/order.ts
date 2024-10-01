@@ -3,6 +3,7 @@ import { Order } from '../models/order';
 import { QuickDB } from "quick.db";
 import * as fs from "fs";
 import * as path from "path";
+import { randomBytes } from 'crypto';  
 
 const router = Router();
 
@@ -22,9 +23,9 @@ router.post('/', async (req: Request, res: Response) => {
 	if (process.env.DOMAIN == "preorder.sab.edu.vn") {
 		res.status(500).send();
 	}
-	let orderID = req.body.orderID as string;
-	if (orderID  == undefined || orderID == "") {
-		orderID = randomString(8);
+	let orderID = await randomString(8);
+	while (await orderDb.has(orderID)) {
+		orderID = await randomString(8);
 	}
 	const order: Order = {
 		id: orderID,
@@ -42,7 +43,11 @@ router.post('/', async (req: Request, res: Response) => {
 	}
 
 	orderDb.set(order.id, order).then(() => {
-		res.status(200).send(order);
+		console.info(`[${order.dayAndTime}]Order ${order.id} created, name: ${order.name}`);
+		// send the object with status code 201 Created
+		res.status(201).json({
+			orderID: order.id
+		});
 	}
 	).catch((e) => {
 		console.error(e)
@@ -76,23 +81,8 @@ router.get('/sheet', async (req: Request, res: Response) => {
 export default router;
 
 function randomString(length) {
-	let result = '';
-	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	const charactersLength = characters.length;
-
-	// Lấy thời gian hiện tại làm seed  
-	let seed = Date.now();
-
-	// Hàm PRNG đơn giản sử dụng seed  
-	function random(): number {
-		seed = (seed * 16807) % 2147483647;
-		return (seed - 1) / 2147483646;
-	}
-
-	for (let i = 0; i < length; i++) {
-		const randomIndex = Math.floor(random() * charactersLength);
-		result += characters[randomIndex];
-	}
-
-	return result;
+	return randomBytes(length)
+		.toString('base64')
+		.replace(/[^a-zA-Z0-9]/g, '')
+		.substring(0, length);  
 }

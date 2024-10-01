@@ -19,6 +19,27 @@ let order = {
 	paymentMethod: String,
 }
 
+const id_text = document.getElementById('student-id');
+const method_text = document.getElementById('method');
+
+function saveSelection() {
+	sessionStorage.setItem('student-id', id_text.value);
+	sessionStorage.setItem('method', method_text.value);
+}
+
+function restoreSelection() {
+	if (sessionStorage.getItem('student-id')) {
+		id_text.value = sessionStorage.getItem('student-id');
+	}
+	if (sessionStorage.getItem('method')) {
+		method_text.value = sessionStorage.getItem('method');
+	}
+}
+
+restoreSelection();
+id_text.addEventListener('change', saveSelection);
+method_text.addEventListener('change', saveSelection);
+
 function isValidID(id) {
 	const idRegex = /^[0-9]{8}$/;
 	return idRegex.test(id);
@@ -132,6 +153,7 @@ function updateCustomerInfo() {
 	document.getElementById('seller-student-id').innerText = `Seller Student ID: ${studentID}`;
 
 	order.studentID = studentID;
+	order.name = studentID;
 	order.paymentMethod = method;
 }
 
@@ -141,7 +163,7 @@ function updateCheckoutRow(rowId, quantity) {
 }
 
 function setQR() {
-	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} `
+	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} ${order.orderID}`;
 	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${order.totalMoney}&addInfo=SAB%20ORDER%20${order.studentID}%20${order.orderID}&accountName=Vo%20Thanh%20Tu`)
 }
 
@@ -150,23 +172,23 @@ function toggleBody() {
 	checkout.classList.toggle("hide");
 }
 
-function postData() {
+async function postData() {
 	order.dayAndTime = Date.now();
 	console.log("Post data now");
 
-	fetch(`${DOMAIN}/order`, {
+	await fetch(`${DOMAIN}/order`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(order)
 	})
-		.then(response => {
+		.then(async response => {
 			if (response.ok) {
-				alert("Order placed successfully! This website will reload in 3 seconds.");
-				setTimeout(() => {
-					location.reload();
-				}, 3000);
+				const data = await response.json();
+				console.info(data);
+				order.orderID = data.orderID;
+				console.info(`orderID: ${order.orderID}`);
 			} else {
 				throw new Error('Something went wrong');
 			}
@@ -195,21 +217,25 @@ document.getElementById('checkout-btn').addEventListener('click', async function
 	event.preventDefault();
 	const method = document.getElementById('method').value.trim();
 
-	randomID();
 	order.name = document.getElementById('student-id').value.trim();
 	order.studentID = document.getElementById('student-id').value.trim();
+	order.paymentMethod = method;
+	postData().then(() => {
 
-	if (validateCheckout()) {
-		if (method === "cash") {
-			order.paymentMethod = "cash";
-			this.disabled = true;
-			postData();
-			return;
+		if (validateCheckout()) {
+			if (method === "cash") {
+				this.disabled = true;
+				alert("Order placed successfully! This website will reload in 3 seconds.");
+				setTimeout(() => {
+					location.reload();
+				}, 3000);
+				return;
+			}
+			updateCustomerInfo();
+			setQR();
+			toggleBody();
 		}
-		updateCustomerInfo();
-		setQR();
-		toggleBody();
-	}
+	});
 });
 
 document.getElementById('back-btn').addEventListener("click", function (event) {
@@ -222,7 +248,10 @@ document.getElementById('submit-btn').addEventListener("click", function (event)
 	this.disabled = true;
 	order.paymentMethod = "transfer";
 	document.getElementById('back-btn').disabled = true;
-	postData();
+	alert("Order placed successfully! This website will reload in 3 seconds.");
+	setTimeout(() => {
+		location.reload();
+	}, 3000);
 });
 
 var selectElement = document.getElementById('method');
@@ -236,31 +265,3 @@ selectElement.addEventListener('change', function () {
 		document.getElementById("checkout-btn").innerText = "Check out<";
 	}
 });  
-
-function randomString(length) {
-	const array = new Uint32Array(length);
-	window.crypto.getRandomValues(array);
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	let result = '';
-	for (let i = 0; i < length; i++) {
-		result += chars.charAt(array[i] % chars.length);
-	}
-	return result;
-}
-
-function randomID() {
-	let tempID = randomString(ID_LENGTH);
-	fetch(`${DOMAIN}/item/${tempID}`)
-		.then(response => {
-			if (response.ok) {
-				randomID();
-			} else {
-				order.orderID = tempID;
-				setQR();
-			}
-		})
-		.catch(error => {
-			console.error("Error occurred while checking ID availability");
-			randomID();
-		});
-}
