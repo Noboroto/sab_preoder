@@ -186,7 +186,6 @@ async function postData() {
 		.then(async response => {
 			if (response.ok) {
 				const data = await response.json();
-				console.info(data);
 				order.orderID = data.orderID;
 				console.info(`orderID: ${order.orderID}`);
 			} else {
