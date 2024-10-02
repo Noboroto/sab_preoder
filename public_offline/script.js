@@ -1,6 +1,6 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
-const DOMAIN = 'https://order.sab.edu.vn';
+const DOMAIN = `https://order.sab.edu.vn`;
 const ID_LENGTH = 8;
 
 let order = {
@@ -21,6 +21,7 @@ let order = {
 
 const id_text = document.getElementById('student-id');
 const method_text = document.getElementById('method');
+const checkoutButton = document.getElementById('checkout-btn');
 
 function saveSelection() {
 	sessionStorage.setItem('student-id', id_text.value);
@@ -33,6 +34,13 @@ function restoreSelection() {
 	}
 	if (sessionStorage.getItem('method')) {
 		method_text.value = sessionStorage.getItem('method');
+	}
+
+	if (method_text.value === "cash") {
+		checkoutButton.innerText = "Submit";
+	}
+	else {
+		checkoutButton.innerText = "Check out";
 	}
 }
 
@@ -170,6 +178,7 @@ function setQR() {
 function toggleBody() {
 	form.classList.toggle("hide");
 	checkout.classList.toggle("hide");
+	checkoutButton.disabled = false;
 }
 
 async function postData() {
@@ -193,10 +202,10 @@ async function postData() {
 			}
 		})
 		.catch(error => {
-			alert("An error occurred. Please try again later. This website will reload in 3 seconds.");
+			alert("An error occurred. Please try again later. This website will reload in 1 second.");
 			setTimeout(() => {
 				location.reload();
-			}, 3000);
+			}, 1000);
 		});
 }
 
@@ -212,7 +221,7 @@ document.getElementById('isTranferred').addEventListener('change', function () {
 	submitButton.disabled = !this.checked;
 });
 
-document.getElementById('checkout-btn').addEventListener('click', async function (event) {
+checkoutButton.addEventListener('click', async function (event) {
 	event.preventDefault();
 	const method = document.getElementById('method').value.trim();
 
@@ -220,20 +229,22 @@ document.getElementById('checkout-btn').addEventListener('click', async function
 	order.studentID = document.getElementById('student-id').value.trim();
 	order.paymentMethod = method;
 	postData().then(() => {
-
+		checkoutButton.disabled = true;
 		if (validateCheckout()) {
 			if (method === "cash") {
 				this.disabled = true;
-				alert("Order placed successfully! This website will reload in 3 seconds.");
+				alert("Order placed successfully! This website will reload in 1 second.");
 				setTimeout(() => {
 					location.reload();
-				}, 3000);
+				}, 1000);
 				return;
 			}
 			updateCustomerInfo();
 			setQR();
 			toggleBody();
 		}
+	}).finally(() => {
+		checkoutButton.disabled = false;
 	});
 });
 
@@ -247,10 +258,10 @@ document.getElementById('submit-btn').addEventListener("click", function (event)
 	this.disabled = true;
 	order.paymentMethod = "transfer";
 	document.getElementById('back-btn').disabled = true;
-	alert("Order placed successfully! This website will reload in 3 seconds.");
+	alert("Order placed successfully! This website will reload in 1 second.");
 	setTimeout(() => {
 		location.reload();
-	}, 3000);
+	}, 1000);
 });
 
 var selectElement = document.getElementById('method');
@@ -258,9 +269,9 @@ var selectElement = document.getElementById('method');
 selectElement.addEventListener('change', function () {
 	var selectedValue = this.value;
 	if (selectedValue === "cash") {
-		document.getElementById("checkout-btn").innerText = "Submit";
+		checkoutButton.innerText = "Submit";
 	}
 	else {
-		document.getElementById("checkout-btn").innerText = "Check out";
+		checkoutButton.innerText = "Check out";
 	}
 });  
