@@ -215,7 +215,7 @@ async function postData() {
 		})
 		.catch(error => {
 			if (isSafariOniOS()) {
-				alert(JSON.stringify(error));
+				alert(`Error: ${error} - ${error.message} - ${error.stack} - ${error.name} - ${JSON.stringify(error)}`);
 				throw new Error(error);
 			}
 			else {
