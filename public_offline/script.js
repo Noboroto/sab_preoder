@@ -1,7 +1,21 @@
+const e = require("cors");
+
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
 const DOMAIN = `https://order.sab.edu.vn`;
 const ID_LENGTH = 8;
+
+function isSafariOniOS() {  
+  const ua = navigator.userAgent;  
+  
+  // Kiểm tra xem thiết bị có phải là iOS (iPhone, iPad, iPod)  
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;  
+  
+  // Kiểm tra xem trình duyệt có phải là Safari  
+  const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);  
+  
+  return isIOS && isSafari;  
+}
 
 let order = {
 	dayAndTime: Date,
@@ -202,7 +216,12 @@ async function postData() {
 			}
 		})
 		.catch(error => {
-			alert("An error occurred. Please try again later. This website will reload in 1 second.");
+			if (isSafariOniOS()) {
+				alert(error);
+			}
+			else {
+				alert("An error occurred. Please try again later. This website will reload in 1 second.");
+			}
 			setTimeout(() => {
 				location.reload();
 			}, 1000);
