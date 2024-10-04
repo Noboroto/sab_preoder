@@ -1,5 +1,3 @@
-const e = require("cors");
-
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
 const DOMAIN = `https://order.sab.edu.vn`;
