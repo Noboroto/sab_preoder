@@ -196,6 +196,11 @@ function toggleBody() {
 async function postData() {
 	order.dayAndTime = Date.now();
 	console.log("Post data now");
+	if (!window.fetch) {
+		alert("Fetch API không được hỗ trợ trên trình duyệt này.");
+		// Nếu fetch không được hỗ trợ, sử dụng XMLHttpRequest hoặc thư viện khác  
+		return Promise.reject(new Error('Fetch API không được hỗ trợ trên trình duyệt này.'));
+	}  
 
 	await fetch(`${DOMAIN}/order`, {
 		method: 'POST',
