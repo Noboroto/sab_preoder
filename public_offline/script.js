@@ -215,7 +215,7 @@ async function postData() {
 		})
 		.catch(error => {
 			if (isSafariOniOS()) {
-				alert(error);
+				alert(JSON.stringify(error));
 			}
 			else {
 				alert("An error occurred. Please try again later. This website will reload in 1 second.");
