@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Order } from '../models/order';
+import { Transaction } from '../models/transaction';
 import { QuickDB } from "quick.db";
 import * as fs from "fs";
 import * as path from "path";
@@ -7,61 +7,54 @@ import { randomBytes } from 'crypto';
 
 const router = Router();
 
-const orderDbPath = process.env.ORDER_DB_PATH || "./files/orders.sqlite";
-const dirPath = path.dirname(orderDbPath);
+const transactionDbPath = process.env.TRANSACTION_DB_PATH || "./files/Transactions.sqlite";
+const dirPath = path.dirname(transactionDbPath);
 
 if (!fs.existsSync(dirPath)) {
 	fs.mkdirSync(dirPath);
 }
 
-export const orderDb = new QuickDB({
-	filePath: orderDbPath
+export const transactionDb = new QuickDB({
+	filePath: transactionDbPath
 });
-orderDb.init();
+transactionDb.init();
 
 router.post('/', async (req: Request, res: Response) => {
-	if (process.env.DOMAIN == "preorder.sab.edu.vn") {
-		res.status(500).send();
-	}
 	let orderID = await randomString(8);
-	while (await orderDb.has(orderID)) {
+	while (await transactionDb.has(orderID)) {
 		orderID = await randomString(8);
 	}
-	const order: Order = {
-		id: orderID,
-		dayAndTime: new Date(),
-		email: "",
-		phone: "",
-		name: req.body.name,
-		blackHolderAmount: req.body.blackHolderAmount,
-		grayHolderAmount: req.body.grayHolderAmount,
-		lanyard1Amount: req.body.lanyard1Amount,
-		lanyard2Amount: req.body.lanyard2Amount,
-		lanyard3Amount: req.body.lanyard3Amount,
+	const info: Transaction = {
+		lastName: req.body.lastName,
+		studentID: req.body.studentID,
+		email: req.body.email,
+		phone: req.body.phone,
+		firstName: req.body.firstName,
 		totalMoney: req.body.totalMoney,
-		paymentMethod: req.body.paymentMethod,
+		events: req.body.events,
 	}
 
-	orderDb.set(order.id, order).then(() => {
-		console.info(`[${order.dayAndTime}]Order ${order.id} created, name: ${order.name}`);
-		// send the object with status code 201 Created
-		res.status(201).json({
-			orderID: order.id
-		});
+	const current = new Date();
+	// convert to UTC +7 timezone
+	current.setHours(current.getHours() + 7);
+	transactionDb.set(orderID, info).then(() => {
+		console.info(`[${current.toISOString()}] Order ${orderID} created`);
+		// send the object with status code 200 Created
+		res.status(200)
 	}
 	).catch((e) => {
 		console.error(e)
-		console.info(order)
+		console.info(info)
 		res.status(500).send();
 	});
 });
 
 router.get('/item/:id', (req: Request, res: Response) => {
 	const id = req.params.id;
-	orderDb.get(id).then((order) => {
+	transactionDb.get(id).then((order) => {
 		res.status(200).send(order);
 	}).catch(() => {
-		res.status(404).send();
+		res.status(500).send();
 	});
 });
 
@@ -73,7 +66,7 @@ router.get('/sheet', async (req: Request, res: Response) => {
 		return;
 	}
 	// return all orders in json format
-	const orders = await orderDb.all();
+	const orders = await transactionDb.all();
 	res.status(200).send(orders);
 });
 

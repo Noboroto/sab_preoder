@@ -6,72 +6,60 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./styles.css">
 	<link rel="icon" type="image/x-icon" href="./assets/sab.ico">
-	<title>Order SAB Items</title>
+	<title>Refund SAB Events</title>
 </head>
 
 <body>
 	<header class="container">
 		<img src="assets/simple-circle-trans.png" class="header-img" />
-		<h1>Order SAB Items</h1>
+		<h1>Refund SAB Events</h1>
 	</header>
 	<div class="container form-body" id="form">
 		<div class="user-info">
-			<h2>Seller Information</h2>
+			<h2>Your Information</h2>
 			<div class="flex-box">
 				<div class="flex-grow">
-					<label for="student-id">Seller Student ID</label>
+					<label for="student-id">Student ID</label>
 					<input type="text" id="student-id" name="student-id" required>
 				</div>
 				<div class="flex-grow">
-					<label for="method">Payment method:</label>
-					<select id="method" name="method">
-						<opbion value="default">Please select payment method</option>
-							<option value="transfer">Transfer</option>
-							<option value="cash">Cash</option>
-					</select>
+					<label for="student-name">Full Name</label>
+					<input type="text" id="student-name" name="student-name" required>
 				</div>
 			</div>
 		</div>
 		<div class="order-info">
-			<h2>Order Information</h2>
+			<h2>Order Information (unit: thoundsand ₫)</h2>
 			<div class="flex-box flex-wrap">
-				<!-- Lanyard 1 -->
+				<!-- Cá voi vượt vũ môn-->
 				<div class="item-card">
 					<div>
-						<label for="quantity-lanyard-1" class="item-label">Lanyard 1 Quantity:</label>
-						<input type="number" class="item-number" id="quantity-lanyard-1" name="quantity-lanyard-1" min="0">
+						<label for="CVM" class="item-label">Cá voi vượt vũ môn</label>
+						<input type="number" class="item-number" id="CVM" name="CVM" min="0" max="999">
 					</div>
 				</div>
 
-				<!-- Lanyard 2 -->
+				<!-- CS101-->
 				<div class="item-card">
 					<div>
-						<label for="quantity-lanyard-2" class="item-label"> Lanyard 2 Quantity:</label>
-						<input type="number" class="item-number" id="quantity-lanyard-2" name="quantity-lanyard-2" min="0">
+						<label for="CS1" class="item-label">CS101</label>
+						<input type="number" class="item-number" id="CS1" name="CS1" min="0" max="999">
 					</div>
 				</div>
 
-				<!-- Lanyard 3 -->
+				<!-- Story In Pixels-->
 				<div class="item-card">
 					<div>
-						<label for="quantity-lanyard-3" class="item-label">Lanyard 3 Quantity:</label>
-						<input type="number" class="item-number" id="quantity-lanyard-3" name="quantity-lanyard-3" min="0">
+						<label for="SIP" class="item-label">Story In Pixels</label>
+						<input type="number" class="item-number" id="SIP" name="SIP" min="0" max="999">
 					</div>
 				</div>
 
-				<!-- Black Holder -->
+				<!-- Hội thao OLYMFIT-->
 				<div class="item-card">
 					<div>
-						<label for="quantity-black-holder" class="item-label">Black Holder Quantity:</label>
-						<input type="number" class="item-number" id="quantity-black-holder" name="quantity-black-holder" min="0">
-					</div>
-				</div>
-
-				<!-- Gray Holder -->
-				<div class="item-card">
-					<div>
-						<label for="quantity-gray-holder" class="item-label">Gray Holder Quantity:</label>
-						<input type="number" class="item-number" id="quantity-gray-holder" name="quantity-gray-holder" min="0">
+						<label for="OLF" class="item-label">Hội thao OLYMFIT</label>
+						<input type="number" class="item-number" id="OLF" name="OLF" min="0" max="999">
 					</div>
 				</div>
 			</div>
@@ -82,47 +70,36 @@
 			<table class="checkout-table">
 				<thead>
 					<tr>
-						<th>Item</th>
-						<th>Quantity</th>
+						<th>Event</th>
 						<th>Unit Price</th>
 						<th>Total Price</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr id="combo-1-row">
-						<td>Combo 1 (1 Lanyard + 1 Holder)</td>
-						<td id="combo-1-quantity">0</td>
-						<td>45.000 ₫</td>
-						<td id="combo-1-total">0 VND</td>
+					<tr id="CVM-row">
+						<td>Cá voi vượt vũ môn</td>
+						<td>1.000 ₫</td>
+						<td id="CVM-total">0 VND</td>
 					</tr>
-					<tr id="combo-2-row">
-						<td>Combo 2 (2 Lanyard + 2 Holder)</td>
-						<td id="combo-2-quantity">0</td>
-						<td>85.000 ₫</td>
-						<td id="combo-2-total">0 VND</td>
+					<tr id="CS1-row">
+						<td>CS101</td>
+						<td>1.000 ₫</td>
+						<td id="CS1-total">0 VND</td>
 					</tr>
-					<tr id="combo-3-row">
-						<td>Combo 3 (3 Lanyard + 3 Holder)</td>
-						<td id="combo-3-quantity">0</td>
-						<td>125.000 ₫</td>
-						<td id="combo-3-total">0 VND</td>
+					<tr id="SIP-row">
+						<td>Story In Pixels</td>
+						<td>1.000 ₫</td>
+						<td id="SIP-total">0 VND</td>
 					</tr>
-					<tr id="lanyard-row">
-						<td>Lanyards</td>
-						<td id="lanyard-quantity">0</td>
-						<td>37.000 ₫</td>
-						<td id="lanyard-total">0 VND</td>
-					</tr>
-					<tr id="holder-row">
-						<td>Holders</td>
-						<td id="holder-quantity">0</td>
-						<td>10.000 ₫</td>
-						<td id="holder-total">0 VND</td>
+					<tr id="OLF-row">
+						<td>Hội thao OLYMFIT</td>
+						<td>1.000 ₫</td>
+						<td id="OLF-total">0 VND</td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="3"><strong>Grand Total</strong></td>
+						<td colspan="2"><strong>Grand Total</strong></td>
 						<td id="grand-total">0 VND</td>
 					</tr>
 				</tfoot>
@@ -136,7 +113,8 @@
 		<div class="user-info">
 			<h2>Seller Information</h2>
 
-			<h3 id="seller-student-id">Student ID: </h3>
+			<h3 id="student-id-info">Student ID: </h3>
+			<h3 id="student-name-info">Student Name: </h3>
 		</div>
 		<div class="order-info">
 			<h2>Order Information</h2>
@@ -144,30 +122,26 @@
 			<table class="checkout-table">
 				<thead>
 					<tr>
-						<th>Item</th>
-						<th>Quantity</th>
+						<th>Event</th>
+						<th>Money</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr id="lanyard-1-row">
-						<td>Lanyard 1</td>
-						<td id="lanyard-1-quantity">0</td>
+					<tr id="CVM-row-info">
+						<td>Cá voi vượt vũ môn</td>
+						<td id="CVM-total-info">0</td>
 					</tr>
-					<tr id="lanyard-2-row">
-						<td>Lanyard 2</td>
-						<td id="lanyard-2-quantity">0</td>
+					<tr id="CS1-row-info">
+						<td>CS101</td>
+						<td id="CS1-total-info">10</td>
 					</tr>
-					<tr id="lanyard-3-row">
-						<td>Lanyard 3</td>
-						<td id="lanyard-3-quantity">0</td>
+					<tr id="SIP-row-info">
+						<td>Story In Pixels</td>
+						<td id="SIP-total-info">0</td>
 					</tr>
-					<tr id="black-holder-row">
-						<td>Black holder</td>
-						<td id="black-holder-quantity">0</td>
-					</tr>
-					<tr id="gray-holder-row">
-						<td>Gray holder</td>
-						<td id="gray-holder-quantity">0</td>
+					<tr id="OLF-row-info">
+						<td>Hội thao OLYMFIT</td>
+						<td id="OLF-total-info">0</td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -187,19 +161,10 @@
 		<div class="transfer-info">
 			<h2>Transfer Information</h2>
 
-			<h3 id="bank-name">Bank name: BIDV</h3>
-			<h3 id="account-number">Account number: 0886542499</h3>
-			<h3 id="account-owner">Account Owner: VO THANH TU</h3>
-			<h3 id="transfer-message">message: </h3>
-		</div>
-		<div class="confirm-text">
-			<input type="checkbox" id="isTranferred" name="isTranferred" value="True" class="confirm-checkbox">
-			<label for="isTranferred"> I confirm that customer have transferred the money for this order via the above QR
-				code.</label>
+			<h3 id="transfer-message">Message: </h3>
 		</div>
 		<div style="display: flex; justify-content: center; width: 100%;">
 			<button class="back-btn" id="back-btn">Back</button>
-			<button class="submit-btn" id="submit-btn" disabled>Submit</button>
 		</div>
 	</div>
 	<footer class="container">
@@ -208,5 +173,4 @@
 	</footer>
 	<script src="./script.js"></script>
 </body>
-
 </html>

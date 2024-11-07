@@ -1,7 +1,6 @@
 import * as dotenv from "dotenv";
 import express, { Request, Response } from 'express';
-import orderRoutes from './routes/order';
-import storageRoutes from './routes/storage';
+import transactionRoutes from './routes/transaction';
 import path from "path";
 
 dotenv.config();
@@ -14,8 +13,7 @@ const app = express();
 app.use(express.json()); // Add this line to enable JSON parsing in the request body
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/order', orderRoutes); 
-app.use('/storage', storageRoutes); 
+app.use('/transaction', transactionRoutes); 
 if (DOMAIN.includes('preorder')) {
 	console.log('Using public folder');
 	app.use(express.static(path.join(path.dirname(__dirname), 'public')));

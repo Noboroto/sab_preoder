@@ -1,6 +1,6 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
-const DOMAIN = (isSafariOniOS()) ? `http://order.sab.edu.vn` : `https://order.sab.edu.vn`;
+const DOMAIN = (isSafariOniOS()) ? `http://fund.sab.edu.vn` : `https://fund.sab.edu.vn`;
 const ID_LENGTH = 8;
 
 function isSafariOniOS() {  
@@ -16,89 +16,69 @@ function isSafariOniOS() {
 }
 
 let order = {
-	dayAndTime: Date,
-	orderID: String,
+	lastName: String,
 	studentID: String,
 	email: String,
 	phone: String,
-	name: String,
-	blackHolderAmount: Number,
-	grayHolderAmount: Number,
-	lanyard1Amount: Number,
-	lanyard2Amount: Number,
-	lanyard3Amount: Number,
+	firstName: String,
 	totalMoney: Number,
-	paymentMethod: String,
+	events: Map
 }
 
 const id_text = document.getElementById('student-id');
+const name_text = document.getElementById('student-name');
 const method_text = document.getElementById('method');
 const checkoutButton = document.getElementById('checkout-btn');
 
 function saveSelection() {
 	sessionStorage.setItem('student-id', id_text.value);
-	sessionStorage.setItem('method', method_text.value);
+	sessionStorage.setItem('student-name', name_text.value);
 }
 
 function restoreSelection() {
 	if (sessionStorage.getItem('student-id')) {
 		id_text.value = sessionStorage.getItem('student-id');
 	}
-	if (sessionStorage.getItem('method')) {
-		method_text.value = sessionStorage.getItem('method');
-	}
-
-	if (method_text.value === "cash") {
-		checkoutButton.innerText = "Submit";
-	}
-	else {
-		checkoutButton.innerText = "Check out";
+	if (sessionStorage.getItem('student-name')) {
+		name_text.value = sessionStorage.getItem('student-name');
 	}
 }
 
 restoreSelection();
 id_text.addEventListener('change', saveSelection);
-method_text.addEventListener('change', saveSelection);
+name_text.addEventListener('change', saveSelection);
 
 function isValidID(id) {
-	const idRegex = /^[0-9]{8}$/;
+	const idRegex = /^[1-9]\d{7}$/;
 	return idRegex.test(id);
 }
 
 function updateCheckoutInfo() {
-	const qtyLanyard1 = parseInt(document.getElementById('quantity-lanyard-1').value) || 0;
-	const qtyLanyard2 = parseInt(document.getElementById('quantity-lanyard-2').value) || 0;
-	const qtyLanyard3 = parseInt(document.getElementById('quantity-lanyard-3').value) || 0;
-	const qtyBlackHolder = parseInt(document.getElementById('quantity-black-holder').value) || 0;
-	const qtyGrayHolder = parseInt(document.getElementById('quantity-gray-holder').value) || 0;
+	const cvm = parseInt(document.getElementById('CVM').value) || 0;
+	const cs1 = parseInt(document.getElementById('CS1').value) || 0;
+	const sip = parseInt(document.getElementById('SIP').value) || 0;
+	const olf = parseInt(document.getElementById('OLF').value) || 0;
 
-	let totalLanyard = qtyLanyard1 + qtyLanyard2 + qtyLanyard3;
-	let totalHolder = qtyBlackHolder + qtyGrayHolder;
+	let totalMoney = cvm + cs1 + sip + olf;
+	const unit = 1000;
 
-	const priceLanyard = 37000;
-	const priceHolder = 10000;
+	const totalPrice = totalMoney * unit;
 
-	const totalPrice =
-		(totalLanyard * priceLanyard) +
-		(totalHolder * priceHolder);
+	order.events = new Map();
+	updateRow('CVM', cvm * unit);
+	updateRow('CS1', cs1 * unit);
+	updateRow('SIP', sip * unit);
+	updateRow('OLF', olf * unit);
+	updateCheckoutRow('CVM', cvm * unit);
+	updateCheckoutRow('CS1', cs1 * unit);
+	updateCheckoutRow('SIP', sip * unit);
+	updateCheckoutRow('OLF', olf * unit);
 
-	updateRow('combo-1', 0, 0);
-	updateRow('combo-2', 0, 0);
-	updateRow('combo-3', 0, 0);
-	updateRow('lanyard', totalLanyard, priceLanyard);
-	updateRow('holder', totalHolder, priceHolder);
-	updateCheckoutRow('lanyard-1', qtyLanyard1);
-	updateCheckoutRow('lanyard-2', qtyLanyard2);
-	updateCheckoutRow('lanyard-3', qtyLanyard3);
-	updateCheckoutRow('black-holder', qtyBlackHolder);
-	updateCheckoutRow('gray-holder', qtyGrayHolder);
-
-	order.lanyard1Amount = qtyLanyard1;
-	order.lanyard2Amount = qtyLanyard2;
-	order.lanyard3Amount = qtyLanyard3;
-	order.blackHolderAmount = qtyBlackHolder;
-	order.grayHolderAmount = qtyGrayHolder;
 	order.totalMoney = totalPrice;
+	order.events.set('CVM', cvm);
+	order.events.set('CS1', cs1);
+	order.events.set('SIP', sip);
+	order.events.set('OLF', olf);
 
 	document.getElementById('grand-total').textContent = formatCurrency(totalPrice);
 	document.getElementById('total').textContent = formatCurrency(totalPrice);
@@ -112,53 +92,46 @@ function formatCurrency(value) {
 	}).format(value);
 }
 
-function updateRow(item, quantity, unitPrice) {
-	const row = document.getElementById(`${item}-row`);
-	const quantityCell = document.getElementById(`${item}-quantity`);
-	const totalCell = document.getElementById(`${item}-total`);
-
-	if (quantity > 0) {
+function updateRow(item, price) {
+	const row = document.getElementById(`${item}-row-info`);
+	const totalCell = document.getElementById(`${item}-total-info`);
+	if (!row || !totalCell) {
+		return;
+	}
+	if (price > 0) {
 		row.style.display = 'table-row';
-		quantityCell.textContent = quantity;
-		totalCell.textContent = formatCurrency(quantity * unitPrice);
+		totalCell.textContent = formatCurrency(price);
 	} else {
 		row.style.display = 'none';
 	}
 }
 
-function isValidEmail(email) {
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test(email);
-}
-
-function isValidPhone(phone) {
-	const phoneRegex = /^[0-9]{10}$/;
-	return phoneRegex.test(phone);
-}
-
 function validateCheckout() {
 	const studentID = document.getElementById('student-id').value.trim();
-	const method = document.getElementById('method').value.trim();
-
-	const qtyLanyard1 = parseInt(document.getElementById('quantity-lanyard-1').value) || 0;
-	const qtyLanyard2 = parseInt(document.getElementById('quantity-lanyard-2').value) || 0;
-	const qtyLanyard3 = parseInt(document.getElementById('quantity-lanyard-3').value) || 0;
-	const qtyBlackHolder = parseInt(document.getElementById('quantity-black-holder').value) || 0;
-	const qtyGrayHolder = parseInt(document.getElementById('quantity-gray-holder').value) || 0;
+	const studentName = document.getElementById('student-name').value.trim();
+	const cvm = parseInt(document.getElementById('CVM').value) || 0;
+	const cs1 = parseInt(document.getElementById('CS1').value) || 0;
+	const sip = parseInt(document.getElementById('SIP').value) || 0;
+	const olf = parseInt(document.getElementById('OLF').value) || 0;
 
 	if (!isValidID(studentID)) {
 		alert("Please enter a valid seller studentID.");
 		return false;
 	}
 
-	if (method === "default") {
-		alert("Please select payment method.");
+	if (studentName === "" || studentName === null) {
+		alert("Please enter your name.");
 		return false;
 	}
 
-	const totalQuantity = qtyLanyard1 + qtyLanyard2 + qtyLanyard3 + qtyBlackHolder + qtyGrayHolder;
-	if (totalQuantity === 0) {
-		alert("Please select at least one item to order.");
+	if (studentName.split(" ").length < 3) {
+		alert("Please enter your full name.");
+		return false;
+	}
+
+	const totalMoney = cvm + cs1 + sip + olf;
+	if (totalMoney === 0) {
+		alert("Please input at least one item.");
 		return false;
 	}
 
@@ -168,68 +141,37 @@ function validateCheckout() {
 
 function updateCustomerInfo() {
 	const studentID = document.getElementById('student-id').value.trim();
-	const method = document.getElementById('method').value.trim();
+	const fullName = document.getElementById('student-name').value.trim();
 
-	document.getElementById('seller-student-id').innerText = `Seller Student ID: ${studentID}`;
+	document.getElementById('student-id-info').innerText = `Student ID: ${studentID}`;
+	document.getElementById('student-name-info').innerText = `Name: ${fullName}`;
+
+	const nameArray = fullName.split(" ");
+
+	const firstName = nameArray[nameArray.length - 1]; 
+	const lastName = nameArray[0];
 
 	order.studentID = studentID;
-	order.name = studentID;
-	order.paymentMethod = method;
+	order.firstName = firstName;
+	order.lastName = lastName;
 }
 
-function updateCheckoutRow(rowId, quantity) {
-	document.getElementById(`${rowId}-quantity`).innerText = quantity;
-	document.getElementById(`${rowId}-row`).style.display = quantity > 0 ? '' : 'none';
+function updateCheckoutRow(rowId, totalMoney) {
+	document.getElementById(`${rowId}-total`).innerText = formatCurrency(totalMoney);
+	document.getElementById(`${rowId}-row`).style.display = totalMoney > 0 ? '' : 'none';
 }
 
 function setQR() {
-	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} ${order.orderID}`;
-	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${order.totalMoney}&addInfo=SAB%20ORDER%20${order.studentID}%20${order.orderID}&accountName=Vo%20Thanh%20Tu`)
+	const selectedKeys = [...order.events.keys()].filter(key => order.events.get(key) > 0);
+	const msg = `${order.studentID} ${selectedKeys.join(" ")} ${order.firstName} ${order.lastName}`;
+	document.getElementById("transfer-message").innerText = `Message: ${msg}`;
+	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${order.totalMoney}&addInfo=${msg.replaceAll(" ", "%20")}&accountName=Vo%20Thanh%20Tu`)
 }
 
 function toggleBody() {
 	form.classList.toggle("hide");
 	checkout.classList.toggle("hide");
 	checkoutButton.disabled = false;
-}
-
-async function postData() {
-	order.dayAndTime = Date.now();
-	console.log("Post data now");
-	if (!window.fetch) {
-		alert("Fetch API không được hỗ trợ trên trình duyệt này.");
-		// Nếu fetch không được hỗ trợ, sử dụng XMLHttpRequest hoặc thư viện khác  
-		return Promise.reject(new Error('Fetch API không được hỗ trợ trên trình duyệt này.'));
-	}  
-
-	await fetch(`${DOMAIN}/order`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(order)
-	})
-		.then(async response => {
-			if (response.ok) {
-				const data = await response.json();
-				order.orderID = data.orderID;
-				console.info(`orderID: ${order.orderID}`);
-			} else {
-				throw new Error('Something went wrong');
-			}
-		})
-		.catch(error => {
-			if (isSafariOniOS()) {
-				alert(`Error: ${error} - ${error.message} - ${error.stack} - ${error.name} - ${JSON.stringify(error)}`);
-				throw new Error(error);
-			}
-			else {
-				alert("An error occurred. Please try again later. This website will reload in 1 second.");
-			}
-			setTimeout(() => {
-				location.reload();
-			}, 1000);
-		});
 }
 
 const inputs = document.querySelectorAll('input[type="number"]');
@@ -239,34 +181,18 @@ inputs.forEach(input => {
 
 updateCheckoutInfo();
 
-document.getElementById('isTranferred').addEventListener('change', function () {
-	const submitButton = document.getElementById('submit-btn');
-	submitButton.disabled = !this.checked;
-});
-
-checkoutButton.addEventListener('click', async function (event) {
+checkoutButton.addEventListener('click', function (event) {
 	event.preventDefault();
-	const method = document.getElementById('method').value.trim();
-
-	order.name = document.getElementById('student-id').value.trim();
-	order.studentID = document.getElementById('student-id').value.trim();
-	order.paymentMethod = method;
-	postData().then(() => {
-		checkoutButton.disabled = true;
-		if (validateCheckout()) {
-			if (method === "cash") {
-				this.disabled = true;
-				alert("Order placed successfully! This website will reload in 1 second.");
-				setTimeout(() => {
-					location.reload();
-				}, 1000);
-				return;
-			}
-			updateCustomerInfo();
-			setQR();
-			toggleBody();
-		}
-	}).finally(() => {
+	if (validateCheckout()) {
+		updateCustomerInfo();
+		setQR();
+		toggleBody();
+	}
+	checkoutButton.disabled = true;
+	postData().catch((e) => {
+		console.error(e);
+	})
+	.finally(() => {
 		checkoutButton.disabled = false;
 	});
 });
@@ -276,25 +202,19 @@ document.getElementById('back-btn').addEventListener("click", function (event) {
 	toggleBody();
 });
 
-document.getElementById('submit-btn').addEventListener("click", function (event) {
-	event.preventDefault();
-	this.disabled = true;
-	order.paymentMethod = "transfer";
-	document.getElementById('back-btn').disabled = true;
-	alert("Order placed successfully! This website will reload in 1 second.");
-	setTimeout(() => {
-		location.reload();
-	}, 1000);
-});
-
-var selectElement = document.getElementById('method');
-
-selectElement.addEventListener('change', function () {
-	var selectedValue = this.value;
-	if (selectedValue === "cash") {
-		checkoutButton.innerText = "Submit";
+async function postData() {
+	console.log("Post data now");
+	if (!window.fetch) {
+		alert("Fetch API không được hỗ trợ trên trình duyệt này.");
+		// Nếu fetch không được hỗ trợ, sử dụng XMLHttpRequest hoặc thư viện khác  
+		return Promise.reject(new Error('Fetch API không được hỗ trợ trên trình duyệt này.'));
 	}
-	else {
-		checkoutButton.innerText = "Check out";
-	}
-});  
+
+	await fetch(`${DOMAIN}/transaction`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(order)
+	})
+}
