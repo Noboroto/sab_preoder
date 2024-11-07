@@ -174,8 +174,8 @@ function setQR() {
   const msg = `${order.studentID} ${selectedKeys.join(" ")} ${
     order.firstName
   } ${order.lastName}`;
-  const accountName = "Vuong Ngu Tin Thanh".replaceAll(" ", "%20");
-  const accountNum = "0886542499";
+  const accountName = "Pham Thanh Vinh".replaceAll(" ", "%20");
+	const accountNum = "8881048176";
   const bankName = "BIDV";
 
   document.getElementById("transfer-message").innerText = `Message: ${msg}`;
