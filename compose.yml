@@ -1,7 +1,7 @@
 services:
-  preorder_web:
+  refund_web:
     build: .
-    container_name: preorder_web
+    container_name: refund_web
     restart: always
     volumes:
       - ./files:/usr/app/files
