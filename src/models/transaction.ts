@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export interface Transaction {
+  date: String;
   lastName: String;
   studentID: String;
   email: String;
