@@ -1,22 +1,19 @@
 import { z } from "zod";
 
 export interface Transaction {
-  date: String;
-  lastName: String;
-  studentID: String;
-  email: String;
-  phone: String;
-  firstName: String;
-  totalMoney: Number;
-  events: Map<String, Number>;
+	transactionID: String;
+	date: String;
+	sellerID: String;
+	customerID: String;
+	customerName: String;
+	products: Map<String, Number>;
 }
 
-export const OrderSchema = z.object({
-  lastName: z.string(),
-  studentID: z.string(),
-  email: z.string(),
-  phone: z.string(),
-  firstName: z.string(),
-  totalMoney: z.number(),
-  events: z.record(z.number()),
+export const TransactionSchema = z.object({
+	transactionID: z.string(),
+	date: z.string(),
+	sellerID: z.string(),
+	customerID: z.string(),
+	customerName: z.string(),
+	products: z.record(z.number()),
 });

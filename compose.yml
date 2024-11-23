@@ -13,6 +13,20 @@ services:
       - AUTH=sabidiordertoi3009
       - DOMAIN=fund.sab.edu.vn
 
+  order_web:
+    build: .
+    container_name: volunteer_order_web
+    restart: always
+    volumes:
+      - ./volunteer_files:/usr/app/files
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - domain-net
+    environment:
+      - AUTH=sabiesdimuaAMD
+      - DOMAIN=order.sab.edu.vn
+
 networks:
   domain-net:
     external: true
