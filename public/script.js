@@ -1,6 +1,6 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
-const DOMAIN = (isSafariOniOS()) ? `http://localhost:3000` : `http://localhost:3000`;
+const DOMAIN = (isSafariOniOS()) ? `http://order.sab.edu.vn/0` : `https://order.sab.edu.vn/`;
 const STUDENT_ID_LENGTH = 8;
 const ORDER_ID_LENGTH = 6;
 
