@@ -237,12 +237,7 @@ checkoutButton.addEventListener('click', async function (event) {
 
 		postData().then(() => {
 			if (method === "cash") {
-				this.disabled = true;
-				alert("Order placed successfully! This website will reload in 1 second.");
-				setTimeout(() => {
-					location.reload();
-				}, 1000);
-				return;
+				location.reload();
 			}
 			updateCheckoutInfo(null, "cko-");
 			setQR();
