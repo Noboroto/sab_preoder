@@ -151,7 +151,7 @@ function updateCustomerInfo() {
 	document.getElementById('customer-fullname').innerText = `Tên người mua: ${customerName}`;
 
 	order.sellerID = sellerID;
-	order.customerID = customerID;
+	order.customerID = (customerID.length < STUDENT_ID_LENGTH) ? "x".repeat(STUDENT_ID_LENGTH - customerID.length) + customerID : customerID;
 	order.customerName = customerName;
 	order.paymentMethod = method;
 }
