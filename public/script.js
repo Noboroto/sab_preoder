@@ -1,313 +1,259 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
+const DOMAIN = (isSafariOniOS()) ? `http://localhost:3000` : `http://localhost:3000`;
+const STUDENT_ID_LENGTH = 8;
+const ORDER_ID_LENGTH = 6;
+
+function isSafariOniOS() {
+	const ua = navigator.userAgent;
+
+	// Kiểm tra xem thiết bị có phải là iOS (iPhone, iPad, iPod)  
+	const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+	// Kiểm tra xem trình duyệt có phải là Safari  
+	const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(ua);
+
+	return isIOS && isSafari;
+}
 
 let order = {
-  dayAndTime: Date,
-  email: String,
-  phone: String,
-  name: String,
-  blackHolderAmount: Number,
-  grayHolderAmount: Number,
-  lanyard1Amount: Number,
-  lanyard2Amount: Number,
-  lanyard3Amount: Number,
-  totalMoney: Number,
-};
+	orderID: String,
+	sellerID: String,
+	customerID: String,
+	customerName: String,
+	combo1: Number,
+	combo2: Number,
+	combo3: Number,
+	combo4: Number,
+	total: Number,
+	paymentMethod: String,
+}
+const price3Type = 25000;
+const price2Type = 20000;
 
-function updateCheckoutInfo() {
-  const qtyLanyard1 =
-    parseInt(document.getElementById("quantity-lanyard-1").value) || 0;
-  const qtyLanyard2 =
-    parseInt(document.getElementById("quantity-lanyard-2").value) || 0;
-  const qtyLanyard3 =
-    parseInt(document.getElementById("quantity-lanyard-3").value) || 0;
-  const qtyBlackHolder =
-    parseInt(document.getElementById("quantity-black-holder").value) || 0;
-  const qtyGrayHolder =
-    parseInt(document.getElementById("quantity-gray-holder").value) || 0;
+const seller_id_text = document.getElementById('seller-id');
+const method_text = document.getElementById('method');
+const checkoutButton = document.getElementById('checkout-btn');
 
-  let totalLanyard = qtyLanyard1 + qtyLanyard2 + qtyLanyard3;
-  let totalHolder = qtyBlackHolder + qtyGrayHolder;
+function saveSelection() {
+	sessionStorage.setItem('seller-id', seller_id_text.value);
+	sessionStorage.setItem('method', method_text.value);
+}
 
-  const priceLanyard = 37000;
-  const priceHolder = 10000;
-  const priceCombo1 = 45000;
-  const priceCombo2 = 85000;
-  const priceCombo3 = 125000;
+function restoreSelection() {
+	if (sessionStorage.getItem('seller-id')) {
+		seller_id_text.value = sessionStorage.getItem('seller-id');
+	}
+	if (sessionStorage.getItem('method')) {
+		method_text.value = sessionStorage.getItem('method');
+	}
+}
 
-  let combo3Count = Math.min(
-    Math.floor(totalLanyard / 3),
-    Math.floor(totalHolder / 3)
-  );
-  totalLanyard -= combo3Count * 3;
-  totalHolder -= combo3Count * 3;
+restoreSelection();
+seller_id_text.addEventListener('change', saveSelection);
+method_text.addEventListener('change', saveSelection);
 
-  let combo2Count = Math.min(
-    Math.floor(totalLanyard / 2),
-    Math.floor(totalHolder / 2)
-  );
-  totalLanyard -= combo2Count * 2;
-  totalHolder -= combo2Count * 2;
+function isValidID(id) {
+	const idRegex = /^[0-9]{8}$/;
+	return idRegex.test(id);
+}
 
-  let combo1Count = Math.min(totalLanyard, totalHolder);
-  totalLanyard -= combo1Count;
-  totalHolder -= combo1Count;
+function updateCheckoutInfo(param = null, prefix = "") {
+	const qtyCombo1 = parseInt(document.getElementById('quantity-combo-1').value) || 0;
+	const qtyCombo2 = parseInt(document.getElementById('quantity-combo-2').value) || 0;
+	const qtyCombo3 = parseInt(document.getElementById('quantity-combo-3').value) || 0;
+	const qtyCombo4 = parseInt(document.getElementById('quantity-combo-4').value) || 0;
 
-  const totalPrice =
-    combo3Count * priceCombo3 +
-    combo2Count * priceCombo2 +
-    combo1Count * priceCombo1 +
-    totalLanyard * priceLanyard +
-    totalHolder * priceHolder;
+	const totalPrice = qtyCombo4 * price2Type + (qtyCombo1 + qtyCombo2 + qtyCombo3) * price3Type 
 
-  updateRow("combo-1", combo1Count, priceCombo1);
-  updateRow("combo-2", combo2Count, priceCombo2);
-  updateRow("combo-3", combo3Count, priceCombo3);
-  updateRow("lanyard", totalLanyard, priceLanyard);
-  updateRow("holder", totalHolder, priceHolder);
-  updateCheckoutRow("lanyard-1", qtyLanyard1);
-  updateCheckoutRow("lanyard-2", qtyLanyard2);
-  updateCheckoutRow("lanyard-3", qtyLanyard3);
-  updateCheckoutRow("black-holder", qtyBlackHolder);
-  updateCheckoutRow("gray-holder", qtyGrayHolder);
+	updateRow(prefix + 'combo-1', qtyCombo1, price3Type);
+	updateRow(prefix + 'combo-2', qtyCombo2, price3Type);
+	updateRow(prefix + 'combo-3', qtyCombo3, price3Type);
+	updateRow(prefix + 'combo-4', qtyCombo4, price2Type);
 
-  order.lanyard1Amount = qtyLanyard1;
-  order.lanyard2Amount = qtyLanyard2;
-  order.lanyard3Amount = qtyLanyard3;
-  order.blackHolderAmount = qtyBlackHolder;
-  order.grayHolderAmount = qtyGrayHolder;
-  order.totalMoney = totalPrice;
+	order.combo1 = qtyCombo1;
+	order.combo2 = qtyCombo2;
+	order.combo3 = qtyCombo3;
+	order.combo4 = qtyCombo4;
+	order.total = totalPrice;
 
-  document.getElementById("grand-total").textContent =
-    formatCurrency(totalPrice);
-  document.getElementById("total").textContent = formatCurrency(totalPrice);
+	document.getElementById(prefix + 'grand-total').textContent = formatCurrency(totalPrice);
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-    minimumFractionDigits: 0,
-  }).format(value);
+	return new Intl.NumberFormat('vi-VN', {
+		style: 'currency',
+		currency: 'VND',
+		minimumFractionDigits: 0
+	}).format(value);
 }
 
 function updateRow(item, quantity, unitPrice) {
-  const row = document.getElementById(`${item}-row`);
-  const quantityCell = document.getElementById(`${item}-quantity`);
-  const totalCell = document.getElementById(`${item}-total`);
+	const row = document.getElementById(`${item}-row`);
+	const quantityCell = document.getElementById(`${item}-quantity`);
+	const totalCell = document.getElementById(`${item}-total`);
 
-  if (quantity > 0) {
-    row.style.display = "table-row";
-    quantityCell.textContent = quantity;
-    totalCell.textContent = formatCurrency(quantity * unitPrice);
-  } else {
-    row.style.display = "none";
-  }
+	if (quantity > 0) {
+		row.style.display = 'table-row';
+		quantityCell.textContent = quantity;
+		totalCell.textContent = formatCurrency(quantity * unitPrice);
+	} else {
+		row.style.display = 'none';
+	}
 }
 
 function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return emailRegex.test(email);
 }
 
 function isValidPhone(phone) {
-  const phoneRegex = /^[0-9]{10}$/;
-  return phoneRegex.test(phone);
+	const phoneRegex = /^[0-9]{10}$/;
+	return phoneRegex.test(phone);
 }
 
 function validateCheckout() {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
+	const sellerID = document.getElementById('seller-id').value.trim();
+	const method = document.getElementById('method').value.trim();
 
-  const qtyLanyard1 =
-    parseInt(document.getElementById("quantity-lanyard-1").value) || 0;
-  const qtyLanyard2 =
-    parseInt(document.getElementById("quantity-lanyard-2").value) || 0;
-  const qtyLanyard3 =
-    parseInt(document.getElementById("quantity-lanyard-3").value) || 0;
-  const qtyBlackHolder =
-    parseInt(document.getElementById("quantity-black-holder").value) || 0;
-  const qtyGrayHolder =
-    parseInt(document.getElementById("quantity-gray-holder").value) || 0;
+	const qtyCombo1 = parseInt(document.getElementById('quantity-combo-1').value) || 0;
+	const qtyCombo2 = parseInt(document.getElementById('quantity-combo-2').value) || 0;
+	const qtyCombo3 = parseInt(document.getElementById('quantity-combo-3').value) || 0;
+	const qtyCombo4 = parseInt(document.getElementById('quantity-combo-4').value) || 0;
 
-  if (!name) {
-    alert("Please enter your name.");
-    return false;
-  }
-  if (!phone) {
-    alert("Please enter your phone number.");
-    return false;
-  }
-  if (!isValidPhone(phone)) {
-    alert("Phone number must be exactly 10 digits.");
-    return false;
-  }
-  if (!email) {
-    alert("Please enter your email.");
-    return false;
-  }
-  if (!isValidEmail(email)) {
-    alert("Please enter a valid email address.");
-    return false;
-  }
+	if (!isValidID(sellerID)) {
+		alert("Please enter a valid seller studentID.");
+		return false;
+	}
 
-  const totalQuantity =
-    qtyLanyard1 + qtyLanyard2 + qtyLanyard3 + qtyBlackHolder + qtyGrayHolder;
-  if (totalQuantity === 0) {
-    alert("Please select at least one item to order.");
-    return false;
-  }
+	if (method === "default") {
+		alert("Please select payment method.");
+		return false;
+	}
 
-  return true;
+	const totalQuantity = qtyCombo1 + qtyCombo2 + qtyCombo3 + qtyCombo4;
+	if (totalQuantity === 0) {
+		alert("Please select at least one item to order.");
+		return false;
+	}
+	return true;
 }
+
 
 function updateCustomerInfo() {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
+	const sellerID = document.getElementById('seller-id').value.trim();
+	const customerID = document.getElementById('customer-id').value.trim();
+	const customerName = document.getElementById('customer-name').value.trim();
+	const method = document.getElementById('method').value.trim();
 
-  document.getElementById("customer-name").innerText = `Name: ${name}`;
-  document.getElementById(
-    "customer-phone"
-  ).innerText = `Phone Number: ${phone}`;
-  document.getElementById("customer-email").innerText = `Email: ${email}`;
+	document.getElementById('seller-student-id').innerText = `MSSV người bán: ${sellerID}`;
+	document.getElementById('customer-student-id').innerText = `MSSV người mua: ${customerID}`;
+	document.getElementById('customer-fullname').innerText = `Tên người mua: ${customerName}`;
 
-  order.name = name;
-  order.email = email;
-  order.phone = phone;
-}
-
-function updateCheckoutRow(rowId, quantity) {
-  document.getElementById(`${rowId}-quantity`).innerText = quantity;
-  document.getElementById(`${rowId}-row`).style.display =
-    quantity > 0 ? "" : "none";
+	order.sellerID = sellerID;
+	order.customerID = customerID;
+	order.customerName = customerName;
+	order.paymentMethod = method;
 }
 
 function setQR() {
-  document.getElementById(
-    "transfer-message"
-  ).innerText = `Message: SAB Preorder ${order.phone} ${order.name}`;
-  document
-    .getElementById("qr_code")
-    .setAttribute(
-      "src",
-      `https://img.vietqr.io/image/BIDV-0886542499-print.jpg?amount=${
-        order.totalMoney
-      }&addInfo=SAB%20Preorder%20${order.phone}%20${order.name.replace(
-        " ",
-        "%20"
-      )}&accountName=Vo%20Thanh%20Tu`
-    );
+	const namesArr = order.customerName.split(" ");
+	const firstName = namesArr[namesArr.length - 1];
+	const lastName = namesArr[0];
+	const bankAccount = "0795557668"
+	const bankOwer = "Nguyen Phuc Tho";
+	const bankCode = "MBBank";
+
+	const msg = `KHTN AMD ${order.customerID} ${order.orderID} A${order.combo1} B${order.combo2} C${order.combo3} D${order.combo4} ${firstName} ${lastName}`;
+	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} ${order.orderID}`;
+	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/${bankCode}-${bankAccount }-print.jpg?amount=${order.totalMoney}&addInfo=${msg.replaceAll(" ","%20")}&accountName=${bankOwer.replaceAll(" ","%20")}`);
 }
 
 function toggleBody() {
-  form.classList.toggle("hide");
-  checkout.classList.toggle("hide");
+	form.classList.toggle("hide");
+	checkout.classList.toggle("hide");
+	checkoutButton.disabled = false;
 }
 
-async function isOutOfStock() {
-  return fetch("https://preorder.sab.edu.vn/storage", {
-    method: "GET",
-  })
-    .then(async (response) => {
-      const data_map = await response.json();
-      if (data_map["lanyard1Amount"] < order.lanyard1Amount) {
-        alert("Out of stock for lanyard 1");
-        return true;
-      }
-      if (data_map["lanyard2Amount"] < order.lanyard2Amount) {
-        alert("Out of stock for lanyard 2");
-        return true;
-      }
-      if (data_map["lanyard3Amount"] < order.lanyard3Amount) {
-        alert("Out of stock for lanyard 3");
-        return true;
-      }
-      if (data_map["blackHolderAmount"] < order.blackHolderAmount) {
-        alert("Out of stock for black holder");
-        return true;
-      }
-      if (data_map["grayHolderAmount"] < order.grayHolderAmount) {
-        alert("Out of stock for gray holder");
-        return true;
-      }
-      console.log("Return true");
-      return false;
-    })
-    .catch((error) => {
-      alert("An error occurred. Please try again later.");
-      console.error(error);
-      return true;
-    });
-}
+async function postData() {
+	console.log("Post data now");
+	if (!window.fetch) {
+		alert("Fetch API không được hỗ trợ trên trình duyệt này.");
+		// Nếu fetch không được hỗ trợ, sử dụng XMLHttpRequest hoặc thư viện khác  
+		return Promise.reject(new Error('Fetch API không được hỗ trợ trên trình duyệt này.'));
+	}
 
-function postData() {
-  order.dayAndTime = Date.now();
-  console.log("Post data now");
-
-  fetch("https://preorder.sab.edu.vn/order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(order),
-  })
-    .then((response) => {
-      if (response.ok) {
-        alert(
-          "Order placed successfully! This website will reload in 3 seconds."
-        );
-        setTimeout(() => {
-          location.reload();
-        }, 3000);
-      } else {
-        throw new Error("Something went wrong");
-      }
-    })
-    .catch((error) => {
-      alert(
-        "An error occurred. Please try again later. This website will reload in 3 seconds."
-      );
-      setTimeout(() => {
-        location.reload();
-      }, 3000);
-    });
+	await fetch(`${DOMAIN}/transaction`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(order)
+	})
+		.then(async response => {
+			if (response.ok) {
+				const data = await response.json();
+				order.orderID = await data.transactionID;
+				console.info(`orderID: ${order.orderID}`);
+			} else {
+				throw new Error('Something went wrong');
+			}
+		})
+		.catch(error => {
+			order.orderID = "0".repeat(ORDER_ID_LENGTH);
+			if (isSafariOniOS()) {
+				alert(`Error: ${error} - ${error.message} - ${error.stack} - ${error.name} - ${JSON.stringify(error)}`);
+				throw new Error(error);
+			}
+			else {
+				alert("An error occurred. Please try again later. This website will reload in 1 second.");
+			}
+			setTimeout(() => {
+				location.reload();
+			}, 100000);
+		});
 }
 
 const inputs = document.querySelectorAll('input[type="number"]');
-inputs.forEach((input) => {
-  input.addEventListener("input", updateCheckoutInfo);
+inputs.forEach(input => {
+	input.addEventListener('input', updateCheckoutInfo);
 });
 
 updateCheckoutInfo();
 
-document.getElementById("isTranferred").addEventListener("change", function () {
-  const submitButton = document.getElementById("submit-btn");
-  submitButton.disabled = !this.checked;
+checkoutButton.addEventListener('click', async function (event) {
+	event.preventDefault();
+	const method = document.getElementById('method').value.trim();
+
+	order.name = document.getElementById('seller-id').value.trim();
+	order.studentID = document.getElementById('seller-id').value.trim();
+	order.paymentMethod = method;
+	if (validateCheckout()) {
+		const ID_LENGTH = 8;
+
+		order.customerID = (order.customerID.length < ID_LENGTH) ? "x".repeat(ID_LENGTH - order.customerID.length) + order.customerID : order.customerID;
+		updateCustomerInfo();
+		checkoutButton.disabled = true;
+
+		postData().then(() => {
+			if (method === "cash") {
+				this.disabled = true;
+				alert("Order placed successfully! This website will reload in 1 second.");
+				setTimeout(() => {
+					location.reload();
+				}, 1000);
+				return;
+			}
+			updateCheckoutInfo(null, "cko-");
+			setQR();
+			toggleBody(); 
+		}).finally(() => {
+		checkoutButton.disabled = false;
+		});
+	}
 });
 
-document
-  .getElementById("checkout-btn")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
-    if (validateCheckout()) {
-      updateCustomerInfo();
-      setQR();
-      toggleBody();
-    }
-  });
-
-document.getElementById("back-btn").addEventListener("click", function (event) {
-  event.preventDefault();
-  toggleBody();
+document.getElementById('back-btn').addEventListener("click", function (event) {
+	event.preventDefault();
+	location.reload();
 });
-
-document
-  .getElementById("submit-btn")
-  .addEventListener("click", function (event) {
-    event.preventDefault();
-    this.disabled = true;
-    document.getElementById("back-btn").disabled = true;
-    postData();
-  });

@@ -6,7 +6,12 @@ export interface Transaction {
 	sellerID: String;
 	customerID: String;
 	customerName: String;
-	products: Map<String, Number>;
+	combo1: Number;
+	combo2: Number;
+	combo3: Number;
+	combo4: Number;
+	total: Number;
+	payment: String;
 }
 
 export const TransactionSchema = z.object({
@@ -15,5 +20,10 @@ export const TransactionSchema = z.object({
 	sellerID: z.string(),
 	customerID: z.string(),
 	customerName: z.string(),
-	products: z.record(z.number()),
+	combo1: z.number(),
+	combo2: z.number(),
+	combo3: z.number(),
+	combo4: z.number(),
+	total: z.number(),
+	payment: z.string(),
 });

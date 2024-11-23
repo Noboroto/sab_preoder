@@ -1,47 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 body {
     background-color: rgb(27, 34, 61);
-    font-family:'Roboto','Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin: 0 0;
     font-size: 16px;
 }
 
-h1, h2, h3, h4, h5, h6, p, label, span, input, table, button, li {
-    color: rgb(255, 255, 255);
-}
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 0;
-}
-.container {
-    display: flex;
-    flex-direction: column;
-    width: min(800px, 100%);
-    height: 100vh;
-    margin: 0 auto;
-}
-
-.header-banner {
-    width: min(800px, 100%);                  /* Make sure the banner spans the full width */
-    height: auto;                 /* Maintain aspect ratio for the banner */
-    display: block;  
-    border-radius: 8px;             /* Ensure the banner is on its own line */
-}
-
-.header-img {
-    width: 50px;                 /* Example size for the circle image */
-    height: auto;                 /* Maintain aspect ratio */            /* Add space between the banner and the circle image */
+h1, h2, h3, h4, h5, h6, p, label, span, input, table, button {
+    color: rgb(255, 255, 255)
 }
 
 h1 {
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
-article {
-    margin: 1rem 2rem;
-    flex-grow: 1;
+.container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header {
+    display: flex;
+    align-items: center;
+}
+
+.header-img {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
 }
 
 .footer-img {
@@ -49,12 +35,10 @@ article {
     margin-bottom: 0.5rem;
 }
 footer {
-    flex-grow: 0;
-    padding: 1rem 2rem;
+    padding: 1rem 0;
 }
 footer > p {
     margin: 0 0;
-    font-size: 0.8rem;
 }
 
 label {
@@ -76,46 +60,141 @@ input[type="text"], input[type="email"], input[type="number"] {
     font-size: 1rem;
 }
 
+select {
+    width: 100%;
+    padding: 9.5px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #00000000;
+    font-size: 1rem;
+		color: white;
+}
+
+option {  
+    background-color: black; /* Màu nền đen */  
+    color: white;            /* Màu chữ trắng */  
+}  
+
+
 input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus {
     border-color: #4CAF50;
     outline: none;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.1);
 }
 
-
-.close-form {
-    display: flex;
-    justify-content: left;
-    color: #fff; 
-    align-items: center;
-    margin-top: 1rem;
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 1rem;
+    display: block;
 }
 
-.heading {
+.item-card {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 1rem;
+}
+
+.item-label, .item-number {
+    color: #000000;
+}
+
+.item-img {
+    width: 100%;
+}
+
+.checkout-info {
+    margin: 2rem 0;
+}
+
+.checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkout-table th, .checkout-table td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+}
+
+.checkout-table th {
+    background-color: #121212;
+    font-weight: bold;
+}
+
+.checkout-table tfoot td {
+    font-weight: bold;
+    background-color: #232323;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    background-color: rgb(38, 46, 74);
+}
+
+.back-btn {
+    width: 35%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+    background-color: rgb(50, 56, 75);
+}
+
+.submit-btn {
+    width: 35%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    background-color: rgb(55, 69, 121);
+}
+  
+.checkout-btn:hover {
+    background-color: rgb(67, 70, 81);
+}
+
+.submit-btn:hover {
+    background-color: rgb(30, 46, 104);
+}
+
+.submit-btn:disabled {
+    background-color: #3c3c3c;
+    cursor: default;
+}
+
+.back-btn:hover {
+    background-color: rgb(43, 54, 94);
+}
+
+.hide {
+    display: none;
+}
+
+.confirm-text {
     display: flex;
-    align-items: center;
     gap: 1rem;
-    justify-content: center;
-    padding-top: 20px;
+    margin: 2rem 0;
+    align-items: start;
 }
 
-.content {
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
+#isTranferred {
+	width: 0.75rem;
+	height: 0.75rem;
 }
 
-a {
-    color:rgb(200, 246, 220);
-}
-
-article p {
-    text-align: justify;
-    line-height: 1.5;
-}
-
-article li {
-    line-height: 1.5;
+#qr_code {
+    width: 100%;
+    max-width: 512px;
 }
 
 @media only screen and (min-width: 600px) {
@@ -123,6 +202,39 @@ article li {
     html {
         font-size: 20px;
     }
+    .container {
+        width: 90%;
+    }
+    label, input[type="text"], select, input[type="email"], input[type="number"] {
+        font-size: 0.75rem;
+    }
+    .item-card {
+        display: flex;
+        align-items: center;
+    }
+    .item-img {
+        width: 50%;
+        margin-right: 2rem;
+    }
+    .checkout-btn {
+        width: 50%;
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+
+    .back-btn {
+        width: 35%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+    }
+    
+    .submit-btn {
+        width: 35%;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+      
 }
 
 @media only screen and (min-width: 1200px) {
@@ -130,4 +242,57 @@ article li {
     html {
         font-size: 24px;
     }
+    .container {
+        width: 80%;
+    }
+    label, input[type="text"], input[type="email"], input[type="number"] {
+        font-size: 0.75rem;
+    }
+    .flex-box {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+    
+    .flex-grow {
+        flex-grow: 1;
+    }
+
+    .item-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 25%;
+    }
+
+    .item-img {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .checkout-btn {
+        width: 35%;
+        font-size: 0.8rem;
+    }
+
+    .back-btn {
+        width: 35%;
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+    }
+    
+    .submit-btn {
+        width: 35%;
+        font-size: 0.8rem;
+    }
+}
+
+.transfer-info {
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 }

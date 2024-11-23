@@ -5,6 +5,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { randomBytes } from "crypto";
 
+const ID_LENGTH = 6;
 const router = Router();
 
 const transactionDbPath =
@@ -21,11 +22,12 @@ export const transactionDb = new QuickDB({
 transactionDb.init();
 
 router.post("/", async (req: Request, res: Response) => {
-	let orderID = await randomString(8);
+
+	let orderID = await randomString(ID_LENGTH);
 	while (await transactionDb.has(orderID)) {
-		orderID = await randomString(8);
+		orderID = await randomString(ID_LENGTH);
 	}
-	const currTime = new Date().toLocaleString("vi-VN", {
+	const currTimeStr = new Date().toLocaleString("vi-VN", {
 		timeZone: "Asia/Ho_Chi_Minh",
 		day: "2-digit",
 		month: "numeric",
@@ -34,12 +36,17 @@ router.post("/", async (req: Request, res: Response) => {
 		minute: "2-digit",
 	});
 	const info: Transaction = {
-		date: currTime,
+		date: currTimeStr,
 		transactionID: orderID,
 		sellerID: req.body.sellerID,
 		customerID: req.body.customerID,
 		customerName: req.body.customerName,
-		products: req.body.products,
+		combo1: req.body.combo1,
+		combo2: req.body.combo2,
+		combo3: req.body.combo3,
+		combo4: req.body.combo4,
+		total: req.body.total,
+		payment: req.body.paymentMethod,
 	};
 
 	const current = new Date();
@@ -48,7 +55,7 @@ router.post("/", async (req: Request, res: Response) => {
 	transactionDb
 		.set(orderID, info)
 		.then(() => {
-			console.info(`[${current.toISOString()}] Order ${orderID} created`);
+			console.info(`[${currTimeStr}] Order ${orderID} created`);
 			// send the object with status code 200 Created
 			res.status(200).send(info);
 		})
