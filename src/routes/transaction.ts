@@ -95,5 +95,6 @@ function randomString(length) {
 	return randomBytes(length)
 		.toString("base64")
 		.replace(/[^a-zA-Z0-9]/g, "")
-		.substring(0, length);
+		.substring(0, length)
+		.toLowerCase();
 }
