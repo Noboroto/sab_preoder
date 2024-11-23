@@ -166,7 +166,7 @@ function setQR() {
 
 	const msg = `KHTN AMD ${order.customerID} ${order.orderID} A${order.combo1} B${order.combo2} C${order.combo3} D${order.combo4} ${firstName} ${lastName}`;
 	document.getElementById("transfer-message").innerText = `Message: SAB ORDER ${order.studentID} ${order.orderID}`;
-	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/${bankCode}-${bankAccount }-print.jpg?amount=${order.totalMoney}&addInfo=${msg.replaceAll(" ","%20")}&accountName=${bankOwer.replaceAll(" ","%20")}`);
+	document.getElementById("qr_code").setAttribute("src", `https://img.vietqr.io/image/${bankCode}-${bankAccount }-print.jpg?amount=${order.total}&addInfo=${msg.replaceAll(" ","%20")}&accountName=${bankOwer.replaceAll(" ","%20")}`);
 }
 
 function toggleBody() {
