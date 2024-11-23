@@ -27,7 +27,8 @@ router.post("/", async (req: Request, res: Response) => {
 	while (await transactionDb.has(orderID)) {
 		orderID = await randomString(ID_LENGTH);
 	}
-	const currTimeStr = new Date().toLocaleString("vi-VN", {
+	const currTime = new Date();
+	const currTimeStr = currTime.toLocaleString("vi-VN", {
 		timeZone: "Asia/Ho_Chi_Minh",
 		day: "2-digit",
 		month: "numeric",
@@ -36,7 +37,7 @@ router.post("/", async (req: Request, res: Response) => {
 		minute: "2-digit",
 	});
 	const info: Transaction = {
-		date: currTimeStr,
+		date: currTime.toISOString(),
 		transactionID: orderID,
 		sellerID: req.body.sellerID,
 		customerID: req.body.customerID,
