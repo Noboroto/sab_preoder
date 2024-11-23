@@ -13,7 +13,7 @@ COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./nodemon.json ./
 COPY ./public ./public
-COPY ./public_offline ./public_offline
+COPY ./fund ./fund
 COPY ./src ./src
 EXPOSE 4000
 ENV PORT=4000
