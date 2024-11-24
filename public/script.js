@@ -237,7 +237,7 @@ async function postData() {
       order.orderID = "0".repeat(ORDER_ID_LENGTH);
       if (isSafariOniOS()) {
         alert(
-          `Error: ${error} - ${error.message} - ${error.stack} - ${
+          `Domain ${DOMAIN} Error: ${error} - ${error.message} - ${error.stack} - ${
             error.name
           } - ${JSON.stringify(error)}`
         );
