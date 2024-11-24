@@ -14,33 +14,28 @@ const app = express();
 app.use(express.json()); // Add this line to enable JSON parsing in the request body
 app.use(express.urlencoded({ extended: true }));
 
-
 if (DOMAIN.includes("fund.sab.edu.vn")) {
   console.log("Using fund folder");
-	app.use("/transaction", transactionEventRoutes);
+  app.use("/transaction", transactionEventRoutes);
   app.use(express.static(path.join(path.dirname(__dirname), "fund")));
-}
-else {
-	console.log("Using public folder");
-	app.use("/transaction", transactionRoutes);
-	app.use(express.static(path.join(path.dirname(__dirname), "public")));
+} else {
+  console.log("Using public folder");
+  app.use("/transaction", transactionRoutes);
+  app.use(express.static(path.join(path.dirname(__dirname), "public")));
 }
 
 app.get("/", (req: Request, res: Response) => {
   console.log("GET /");
   if (DOMAIN.includes("localhost")) {
     console.info("DOMAIN includes localhost");
-    res.sendFile(
-      path.join(path.dirname(__dirname), "public", "index.html")
-    );
+    res.sendFile(path.join(path.dirname(__dirname), "public", "index.html"));
   } else if (DOMAIN.includes("preorder")) {
     console.info("DOMAIN includes order");
     res.sendFile(path.join(path.dirname(__dirname), "public", "index.html"));
-	} else if (DOMAIN.includes("fund.sab.edu.vn")) {
-		console.info("DOMAIN includes fund.sab.edu.vn");
-		res.sendFile(path.join(path.dirname(__dirname), "fund", "index.html"));
-	}
-	else {
+  } else if (DOMAIN.includes("fund.sab.edu.vn")) {
+    console.info("DOMAIN includes fund.sab.edu.vn");
+    res.sendFile(path.join(path.dirname(__dirname), "fund", "index.html"));
+  } else {
     console.info("DOMAIN includes production");
     res.sendFile(
       path.join(path.dirname(__dirname), "public_offline", "index.html")
