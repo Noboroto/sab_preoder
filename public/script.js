@@ -1,7 +1,7 @@
 const form = document.getElementById("form");
 const checkout = document.getElementById("checkout");
 const DOMAIN = isSafariOniOS()
-	? `http://order.sab.edu.vn`
+	? `https://order.sab.edu.vn`
 	: `https://order.sab.edu.vn`;
 const STUDENT_ID_LENGTH = 8;
 const ORDER_ID_LENGTH = 6;
