@@ -12,7 +12,7 @@ export interface Transaction {
   combo4: Number;
   total: Number;
   payment: String;
-	isPreOrder: Boolean;
+  isPreOrder: Boolean;
 }
 
 export const TransactionSchema = z.object({
@@ -27,5 +27,5 @@ export const TransactionSchema = z.object({
   combo4: z.number(),
   total: z.number(),
   payment: z.string(),
-	isPreOrder: z.boolean(),
+  isPreOrder: z.boolean(),
 });
