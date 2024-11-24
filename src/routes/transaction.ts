@@ -49,6 +49,7 @@ router.post("/", async (req: Request, res: Response) => {
     combo4: req.body.combo4,
     total: req.body.total,
     payment: req.body.paymentMethod,
+		isPreOrder: req.body.isPreOrder,
   };
 
   const current = new Date();

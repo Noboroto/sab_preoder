@@ -31,11 +31,17 @@
 					<input type="text" id="customer-name" name="customer-name" required>
 				</div>
 				<div class="flex-grow">
-					<label for="method">Phương thức thanh toán:</label>
-					<select id="method" name="method">
-						<opbion value="default">Vui lòng chọn phương thức thanh toán</option>
-							<option value="transfer">Chuyển khoản</option>
-							<option value="cash">Tiền mặt</option>
+					<label for="pay-method">Phương thức thanh toán:</label>
+					<select id="pay-method" name="pay-method">
+						<option value="transfer">Chuyển khoản</option>
+						<option value="cash">Tiền mặt</option>
+					</select>
+				</div>
+				<div class="flex-grow">
+					<label for="buy-method">Phương thức mua:</label>
+					<select id="buy-method" name="method">
+						<option value="onsite">Tại chỗ</option>
+						<option value="preorder">Đặt trước</option>
 					</select>
 				</div>
 			</div>
