@@ -189,7 +189,7 @@ function setQR() {
   const bankOwer = "Nguyen Phuc Tho";
   const bankCode = "MBBank";
 
-  const msg = `KHTN AMD ${order.customerID} ${order.orderID} A${order.combo1} B${order.combo2} C${order.combo3} D${order.combo4} ${firstName} ${lastName}`;
+  const msg = `SAB AMD ${order.orderID} ${order.customerID}  ${firstName} ${lastName}`;
   document.getElementById("transfer-message").innerText = `Message: ${msg}`;
   document
     .getElementById("qr_code")

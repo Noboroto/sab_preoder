@@ -95,9 +95,17 @@ router.get("/sheet", async (req: Request, res: Response) => {
 export default router;
 
 function randomString(length) {
-  return randomBytes(length)
-    .toString("base64")
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .substring(0, length)
-    .toLowerCase();
+  // Bộ ký tự an toàn để sinh random (loại trừ 0, O, 1, I)
+  const safeChars = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  let result = "";
+  const charLength = safeChars.length;
+  for (let i = 0; i < length; i++) {
+    // Sử dụng crypto.randomBytes để tạo số ngẫu nhiên an toàn
+    const randomBuffer = randomBytes(1);
+    // Chuyển đổi buffer thành số nguyên
+    const randomIndex = randomBuffer.readUInt8(0) % charLength;
+    result += safeChars[randomIndex];
+  }
+  return result;
 }
