@@ -195,7 +195,7 @@ function setQR() {
     .getElementById("qr_code")
     .setAttribute(
       "src",
-      `https://img.vietqr.io/image/${bankCode}-${bankAccount}-print.jpg?amount=${
+			`https://api.vietqr.io/image/${bankCode}-${bankAccount}-3VJe1ij.jpg?amount=${
         order.total
       }&addInfo=${msg.replaceAll(" ", "%20")}&accountName=${bankOwer.replaceAll(
         " ",
