@@ -107,5 +107,5 @@ function randomString(length) {
     const randomIndex = randomBuffer.readUInt8(0) % charLength;
     result += safeChars[randomIndex];
   }
-  return result;
+  return result.toUpperCase();
 }
